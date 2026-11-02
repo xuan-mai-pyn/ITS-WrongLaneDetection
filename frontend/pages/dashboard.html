@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard · ITS Wrong-Lane Detection</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <script defer src="/assets/js/api.js"></script>
+    <script defer src="/assets/js/main.js"></script>
+    <script defer src="/assets/js/dashboard.js"></script>
+  </head>
+  <body data-page="dashboard">
+    <aside class="sidebar">
+      <a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a>
+      <nav aria-label="Main navigation">
+        <a class="nav-link active" href="/dashboard">Overview</a>
+        <a class="nav-link" href="/detection">New analysis</a>
+        <a class="nav-link" href="/history">Video history</a>
+        <a class="nav-link" href="/statistics">Statistics</a>
+      </nav>
+      <div class="sidebar-note">Camera-specific lane configuration is required to evaluate wrong-lane behavior.</div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div><p class="eyebrow">TRAFFIC OPERATIONS</p><h1>Overview</h1></div><a class="button button-primary" href="/detection">Analyze a video</a></header>
+      <section class="page-intro"><div><h2>Analysis dashboard</h2><p>Review data recorded by completed video-processing tasks.</p></div><span class="status-pill"><span class="status-dot"></span> API connected</span></section>
+      <section class="stat-grid" aria-label="Processing summary">
+        <article class="stat-card"><span>Videos processed</span><strong id="processed-videos">—</strong><small>Completed tasks only</small></article>
+        <article class="stat-card"><span>Tracked vehicles</span><strong id="total-vehicles">—</strong><small>Unique tracker IDs</small></article>
+        <article class="stat-card"><span>Recorded violations</span><strong id="total-violations">—</strong><small>Configured rules only</small></article>
+        <article class="stat-card"><span>Video violation rate</span><strong id="detection-rate">—</strong><small>Completed videos with violations</small></article>
+      </section>
+      <section class="content-card">
+        <div class="section-heading"><div><h2>Recent videos</h2><p>Latest uploads and their processing state</p></div><a href="/history" class="text-link">View history →</a></div>
+        <div class="table-wrap"><table><thead><tr><th>Video</th><th>Uploaded</th><th>Status</th><th>Vehicles</th><th>Violations</th></tr></thead><tbody id="recent-videos"><tr><td colspan="5" class="empty-state">Loading videos…</td></tr></tbody></table></div>
+      </section>
+      <section class="content-card">
+        <div class="section-heading"><div><h2>Recorded totals</h2><p>Aggregates from completed processing tasks</p></div></div>
+        <div id="dashboard-chart" class="bar-list"><p class="empty-state">Loading statistics…</p></div>
+      </section>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+  </body>
+</html>

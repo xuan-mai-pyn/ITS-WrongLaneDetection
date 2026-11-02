@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Statistics · ITS Wrong-Lane Detection</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script defer src="/assets/js/api.js"></script><script defer src="/assets/js/main.js"></script><script defer src="/assets/js/statistics.js"></script>
+  </head>
+  <body data-page="statistics">
+    <aside class="sidebar"><a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a><nav aria-label="Main navigation"><a class="nav-link" href="/dashboard">Overview</a><a class="nav-link" href="/detection">New analysis</a><a class="nav-link" href="/history">Video history</a><a class="nav-link active" href="/statistics">Statistics</a></nav><div class="sidebar-note">Statistics are calculated from completed tasks stored by this application.</div></aside>
+    <main class="main-content"><header class="topbar"><div><p class="eyebrow">MEASUREMENTS</p><h1>Statistics</h1></div></header><section class="page-intro"><div><h2>Processing summary</h2><p>No sample or synthetic results are included.</p></div></section><section class="stat-grid"><article class="stat-card"><span>Processed videos</span><strong id="processed-videos">—</strong><small>Completed analysis tasks</small></article><article class="stat-card"><span>Unique tracked vehicles</span><strong id="total-vehicles">—</strong><small>Sum of completed video results</small></article><article class="stat-card"><span>Recorded violations</span><strong id="total-violations">—</strong><small>Based on configured rules</small></article><article class="stat-card"><span>Video violation rate</span><strong id="detection-rate">—</strong><small>Completed videos with violations</small></article></section><section class="content-card"><div class="section-heading"><div><h2>Available measurements</h2><p>Current aggregate values from SQLite</p></div></div><div id="statistics-breakdown" class="bar-list"><p class="empty-state">Loading statistics…</p></div></section><div id="toast" class="toast" role="status" aria-live="polite"></div></main>
+  </body>
+</html>

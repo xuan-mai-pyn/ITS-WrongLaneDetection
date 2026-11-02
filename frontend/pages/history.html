@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video history · ITS Wrong-Lane Detection</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script defer src="/assets/js/api.js"></script><script defer src="/assets/js/main.js"></script><script defer src="/assets/js/history.js"></script>
+  </head>
+  <body data-page="history">
+    <aside class="sidebar"><a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a><nav aria-label="Main navigation"><a class="nav-link" href="/dashboard">Overview</a><a class="nav-link" href="/detection">New analysis</a><a class="nav-link active" href="/history">Video history</a><a class="nav-link" href="/statistics">Statistics</a></nav><div class="sidebar-note">History reflects saved video and task records in the local SQLite database.</div></aside>
+    <main class="main-content"><header class="topbar"><div><p class="eyebrow">RECORDS</p><h1>Video history</h1></div><a class="button button-primary" href="/detection">New analysis</a></header><section class="page-intro"><div><h2>Uploaded videos</h2><p>Processing failures are shown and are not counted as completed results.</p></div></section><section class="content-card"><div class="table-wrap"><table><thead><tr><th>Video</th><th>Uploaded</th><th>State</th><th>Processing time</th><th>Frames</th><th>Vehicles</th><th>Violations</th></tr></thead><tbody id="history-videos"><tr><td colspan="7" class="empty-state">Loading videos…</td></tr></tbody></table></div></section><section class="content-card"><div class="section-heading"><div><h2>Recent violations</h2><p>Recorded only when configured lane rules are evaluated</p></div></div><div class="table-wrap"><table><thead><tr><th>Vehicle ID</th><th>Transition</th><th>Video</th><th>Time</th></tr></thead><tbody id="history-violations"><tr><td colspan="4" class="empty-state">Loading violations…</td></tr></tbody></table></div></section><div id="toast" class="toast" role="status" aria-live="polite"></div></main>
+  </body>
+</html>

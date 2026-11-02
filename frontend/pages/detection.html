@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New analysis · ITS Wrong-Lane Detection</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/detection.css">
+    <script defer src="/assets/js/api.js"></script>
+    <script defer src="/assets/js/main.js"></script>
+    <script defer src="/assets/js/detection.js"></script>
+  </head>
+  <body data-page="detection">
+    <aside class="sidebar">
+      <a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a>
+      <nav aria-label="Main navigation">
+        <a class="nav-link" href="/dashboard">Overview</a><a class="nav-link active" href="/detection">New analysis</a><a class="nav-link" href="/history">Video history</a><a class="nav-link" href="/statistics">Statistics</a>
+      </nav>
+      <div class="sidebar-note">Processing requires local YOLO weights. Without lane rules, analysis is detection-only.</div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div><p class="eyebrow">VIDEO WORKFLOW</p><h1>New analysis</h1></div><a class="button button-secondary" href="/history">View history</a></header>
+      <section class="page-intro"><div><h2>Upload a traffic video</h2><p>Accepted formats: MP4, AVI, MOV, and MKV.</p></div></section>
+      <section class="workflow-grid">
+        <article class="content-card">
+          <div class="section-heading"><div><h2>Video source</h2><p>Select a local video to begin</p></div></div>
+          <label class="upload-zone" for="video-file"><span class="upload-icon">↑</span><strong>Choose a video file</strong><span>Maximum upload size is configured by the server.</span><input id="video-file" type="file" accept="video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,.mkv"></label>
+          <video id="input-preview" class="video-preview" controls hidden></video>
+          <div class="file-meta" id="file-meta"></div>
+          <button id="start-analysis" class="button button-primary" type="button" disabled>Upload &amp; start analysis</button>
+        </article>
+        <article class="content-card result-card">
+          <div class="section-heading"><div><h2>Processing status</h2><p id="task-message">No task started yet.</p></div><span id="task-status" class="tag">Waiting</span></div>
+          <div class="progress-track"><div id="task-progress" class="progress-fill"></div></div>
+          <div class="progress-label"><span id="progress-value">0%</span><span id="frame-value">0 frames</span></div>
+          <div id="result-summary" class="result-summary">Results will appear here after processing.</div>
+          <video id="output-video" class="video-preview" controls hidden></video>
+        </article>
+      </section>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+  </body>
+</html>

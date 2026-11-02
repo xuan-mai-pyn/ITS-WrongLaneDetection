@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments and local configuration
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Local databases and logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Large/private traffic data and model weights
+data/input/*
+!data/input/.gitkeep
+data/datasets/*
+!data/datasets/.gitkeep
+data/samples/*
+!data/samples/.gitkeep
+models/weights/*
+!models/weights/.gitkeep
+storage/uploads/*
+!storage/uploads/.gitkeep
+storage/processed/*
+!storage/processed/.gitkeep
+storage/evidence/*
+!storage/evidence/.gitkeep
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
