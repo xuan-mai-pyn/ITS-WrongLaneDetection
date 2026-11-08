@@ -1,0 +1,639 @@
+
+PROJECT: ITS-WrongLaneDetection TOPIC: Xây dựng hệ thống nhận diện
+phương tiện đi sai làn đường
+
+============================================================ 1. MỤC ĐÍCH
+TÀI LIỆU ============================================================
+
+Tài liệu này mô tả cấu trúc thư mục, chức năng dự kiến của từng file và
+người phụ trách trong dự án ITS-WrongLaneDetection.
+
+Các mô tả dưới đây là định hướng thiết kế theo cấu trúc dự án, không
+khẳng định rằng các chức năng đã được lập trình hoàn chỉnh. Khi triển
+khai, các thành viên cần thống nhất cách trao đổi dữ liệu giữa những
+module có liên quan.
+
+
+============================================================ 2. CẤU TRÚC
+THƯ MỤC DỰ ÁN
+============================================================
+
+ITS-WrongLaneDetection/
+│
+├── README.md                         
+├── requirements.txt                  
+├── .gitignore                        
+├── .env.example                      
+├── LICENSE                           
+│
+├── backend/
+│   ├── __init__.py                   (Cường)
+│   ├── main.py                       (Cường)
+│   ├── config.py                     (Cường)
+│   │
+│   ├── api/
+│   │   ├── __init__.py               (Cường)
+│   │   ├── dependencies.py            (Cường)
+│   │   └── routes/
+│   │       ├── __init__.py           (Cường)
+│   │       ├── health.py              (Cường)
+│   │       ├── video.py               (Cường)
+│   │       ├── detection.py           (Cường)
+│   │       ├── violations.py          (Cường)
+│   │       └── statistics.py          (Hiếu)
+│   │
+│   ├── core/
+│   │   ├── __init__.py                (Cường)
+│   │   ├── detector.py                (Khang)
+│   │   ├── tracker.py                 (Khang)
+│   │   ├── lane_detector.py           (Mai)
+│   │   ├── wrong_lane_detector.py     (Khang)
+│   │   ├── video_processor.py         (Cường)
+│   │   └── alert_manager.py           (Cường)
+│   │
+│   ├── models/
+│   │   ├── __init__.py                (Cường)
+│   │   ├── vehicle.py                 (Khang)
+│   │   ├── lane.py                    (Mai)
+│   │   └── violation.py               (Khang)
+│   │
+│   ├── schemas/
+│   │   ├── __init__.py                (Cường)
+│   │   ├── video.py                   (Cường)
+│   │   ├── detection.py               (Cường)
+│   │   └── violation.py               (Cường)
+│   │
+│   ├── services/
+│   │   ├── __init__.py                (Cường)
+│   │   ├── video_service.py           (Cường)
+│   │   ├── detection_service.py       (Cường)
+│   │   └── statistics_service.py     (Hiếu)
+│   │
+│   ├── database/
+│   │   ├── __init__.py                (Cường)
+│   │   ├── connection.py              (Cường)
+│   │   └── repository.py              (Cường)
+│   │
+│   └── utils/
+│       ├── __init__.py                (Cường)
+│       ├── file_handler.py            (Cường)
+│       └── image_utils.py             (Mai)
+│
+├── frontend/
+│   ├── index.html                     (Khoa)
+│   ├── pages/
+│   │   ├── dashboard.html             (Khoa)
+│   │   ├── detection.html              (Khoa)
+│   │   ├── history.html                (Khoa)
+│   │   └── statistics.html             (Khoa)
+│   │
+│   ├── assets/
+│   │   ├── css/
+│   │   │   ├── style.css              (Khoa)
+│   │   │   ├── dashboard.css          (Khoa)
+│   │   │   └── detection.css          (Khoa)
+│   │   │
+│   │   ├── js/
+│   │   │   ├── main.js                (Khoa)
+│   │   │   ├── api.js                 (Khoa)
+│   │   │   ├── dashboard.js           (Khoa)
+│   │   │   ├── detection.js           (Khoa)
+│   │   │   ├── history.js             (Khoa)
+│   │   │   └── statistics.js          (Khoa)
+│   │   │
+│   │   └── images/                    (Khoa)
+│   │
+│   └── README.md                      (Khoa)
+│
+├── data/
+│   ├── input/                         (Mai)
+│   ├── datasets/                      (Mai)
+│   └── samples/                       (Mai)
+│
+├── models/
+│   ├── weights/                       (Khang)
+│   └── README.md                      (Khang)
+│
+├── storage/
+│   ├── uploads/                       (Cường)
+│   ├── processed/                     (Cường)
+│   └── evidence/                      (Cường)
+│
+├── tests/
+│   ├── __init__.py                    (Hiếu)
+│   ├── test_api.py                    (Hiếu)
+│   ├── test_detection.py              (Hiếu)
+│   ├── test_tracking.py               (Hiếu)
+│   └── test_wrong_lane.py             (Hiếu)
+│
+├── docs/
+│   ├── architecture.md                (Cường)
+│   ├── api_documentation.md           (Cường)
+│   ├── algorithms.md                  (Khang)
+│   └── development_guide.md           (Khoa)
+│
+└── scripts/
+    ├── run_backend.py                 (Cường)
+    └── setup_database.py              (Cường)
+
+ 
+============================================================ 3. CHỨC
+NĂNG CÁC FILE VÀ THƯ MỤC
+============================================================
+
+3.1. CÁC FILE Ở THƯ MỤC GỐC
+
+README.md - Giới thiệu tổng quan về dự án, mục tiêu và chức năng
+chính. - Trình bày công nghệ sử dụng, cấu trúc thư mục và hướng dẫn cài
+đặt, chạy chương trình. - Là tài liệu đầu tiên người dùng hoặc thành
+viên mới nên đọc khi truy cập repository.
+
+requirements.txt - Liệt kê các thư viện Python cần thiết để cài đặt và
+chạy dự án. - Có thể bao gồm OpenCV, Ultralytics, FastAPI, Uvicorn và
+những thư viện thực sự được sử dụng. - Cài đặt các thư viện bằng lệnh:
+pip install -r requirements.txt.
+
+.gitignore - Khai báo những file và thư mục Git không cần theo dõi. - Ví
+dụ: môi trường ảo, cache Python, file tạm, file cấu hình cá nhân và dữ
+liệu sinh ra trong quá trình chạy.
+
+.env.example - Cung cấp mẫu tên các biến môi trường mà ứng dụng có thể
+cần. - Ví dụ: đường dẫn lưu trữ, cấu hình cơ sở dữ liệu hoặc cổng chạy
+Backend. - Chỉ chứa giá trị mẫu, không đưa mật khẩu hoặc thông tin bí
+mật thật lên GitHub.
+
+LICENSE - Quy định điều kiện sử dụng, chỉnh sửa, sao chép và phân phối
+mã nguồn dự án.
+
+3.2. BACKEND - XỬ LÝ PHÍA MÁY CHỦ
+
+backend/init.py (Cường) - Đánh dấu backend là một Python package. - Có
+thể để trống nếu không cần khởi tạo thành phần riêng.
+
+backend/main.py (Cường) - Là điểm khởi chạy chính của Backend. - Khởi
+tạo ứng dụng, đăng ký các nhóm API và thiết lập những thành phần cần
+thiết để máy chủ hoạt động.
+
+backend/config.py (Cường) - Tập trung quản lý cấu hình dùng chung. - Ví
+dụ: đường dẫn dữ liệu, thư mục lưu video, đường dẫn trọng số YOLO, cấu
+hình máy chủ và cơ sở dữ liệu nếu có.
+
+3.3. BACKEND/API - GIAO TIẾP GIỮA FRONTEND VÀ BACKEND
+
+backend/api/init.py (Cường) - Đánh dấu thư mục api là một Python
+package.
+
+backend/api/dependencies.py (Cường) - Khai báo các thành phần phụ thuộc
+được nhiều API sử dụng. - Ví dụ: đối tượng cấu hình, dịch vụ xử lý video
+hoặc thành phần quản lý tài nguyên dùng chung.
+
+backend/api/routes/init.py (Cường) - Đánh dấu thư mục routes là một
+Python package.
+
+backend/api/routes/health.py (Cường) - Cung cấp API kiểm tra trạng thái
+hoạt động của Backend. - Giúp Frontend hoặc người quản trị biết máy chủ
+có đang hoạt động hay không.
+
+backend/api/routes/video.py (Cường) - Cung cấp API liên quan đến
+video. - Có thể tiếp nhận video tải lên, kiểm tra thông tin video và yêu
+cầu bắt đầu xử lý.
+
+backend/api/routes/detection.py (Cường) - Cung cấp API phục vụ chức năng
+phát hiện và theo dõi phương tiện. - Tiếp nhận yêu cầu từ Frontend và
+trả về kết quả xử lý tương ứng.
+
+backend/api/routes/violations.py (Cường) - Cung cấp API truy xuất các
+trường hợp phương tiện bị xác định là đi sai làn. - Trả về danh sách vi
+phạm và thông tin chi tiết của từng trường hợp.
+
+backend/api/routes/statistics.py (Hiếu) - Cung cấp API thống kê kết quả
+hoạt động. - Ví dụ: tổng số phương tiện được phát hiện, số trường hợp vi
+phạm và số liệu phục vụ trang thống kê.
+
+3.4. BACKEND/CORE - CÁC MODULE XỬ LÝ CỐT LÕI
+
+backend/core/init.py (Cường) - Đánh dấu core là một Python package.
+
+backend/core/detector.py (Khang) - Chứa chức năng phát hiện phương tiện
+bằng mô hình YOLO. - Nhận từng khung hình video và trả về thông tin đối
+tượng được phát hiện. - Thông tin cơ bản gồm loại phương tiện, độ tin
+cậy và tọa độ Bounding Box.
+
+backend/core/tracker.py (Khang) - Theo dõi phương tiện qua nhiều khung
+hình bằng ByteTrack hoặc SORT. - Gán track_id cho từng phương tiện để
+nhận biết cùng một phương tiện trong các khung hình liên tiếp.
+
+backend/core/lane_detector.py (Mai) - Xác định phương tiện đang thuộc
+làn đường nào. - Sử dụng vùng Polygon được cấu hình trước cho từng làn
+và điểm Bottom-center của Bounding Box để kiểm tra phương tiện thuộc
+vùng làn nào. - Nếu không xác định được thì cần trả về trạng thái chưa
+xác định, không tự gán làn.
+
+backend/core/wrong_lane_detector.py (Khang) - Kiểm tra phương tiện có đi
+sai làn hay không. - Sử dụng thông tin làn hiện tại, hướng di chuyển,
+quy tắc lưu thông và lịch sử vị trí. - Nên kiểm tra hành vi trong nhiều
+khung hình để hạn chế cảnh báo nhầm. - Việc một phương tiện nằm trong
+một Polygon không tự động chứng minh phương tiện đó vi phạm.
+
+backend/core/video_processor.py (Cường) - Điều phối toàn bộ quá trình xử
+lý video. - Đọc khung hình và gọi lần lượt các module phát hiện, theo
+dõi, xác định làn và nhận diện vi phạm. - Tổng hợp kết quả xử lý để cung
+cấp cho các thành phần tiếp theo. - Không viết lại thuật toán YOLO,
+tracker hoặc thuật toán xác định làn trong file này.
+
+backend/core/alert_manager.py (Cường) - Quản lý thông tin cảnh báo khi
+phát hiện phương tiện đi sai làn. - Tạo thông tin cảnh báo và hạn chế
+tạo nhiều cảnh báo trùng lặp cho cùng một trường hợp.
+
+3.5. BACKEND/MODELS - CẤU TRÚC DỮ LIỆU NỘI BỘ
+
+backend/models/init.py (Cường) - Đánh dấu models là một Python package.
+
+backend/models/vehicle.py (Khang) - Định nghĩa cấu trúc dữ liệu đại diện
+cho phương tiện. - Có thể gồm track_id, class_name, confidence, bbox và
+các thông tin liên quan.
+
+backend/models/lane.py (Mai) - Định nghĩa cấu trúc dữ liệu đại diện cho
+làn đường. - Có thể gồm lane_id, tên làn, vùng Polygon và quy tắc lưu
+thông tương ứng.
+
+backend/models/violation.py (Khang) - Định nghĩa cấu trúc dữ liệu đại
+diện cho một trường hợp vi phạm. - Có thể gồm phương tiện liên quan, làn
+đường, loại vi phạm, thời điểm và nội dung mô tả.
+
+3.6. BACKEND/SCHEMAS - CẤU TRÚC DỮ LIỆU API
+
+schemas quy định dữ liệu đầu vào và đầu ra khi trao đổi qua API. Phần
+này khác với models: models mô tả đối tượng nội bộ, còn schemas mô tả dữ
+liệu API tiếp nhận hoặc trả về.
+
+backend/schemas/init.py (Cường) - Đánh dấu schemas là một Python
+package.
+
+backend/schemas/video.py (Cường) - Định nghĩa cấu trúc dữ liệu yêu cầu
+và phản hồi API liên quan đến video. - Ví dụ: thông tin video tải lên và
+trạng thái xử lý.
+
+backend/schemas/detection.py (Cường) - Định nghĩa cấu trúc dữ liệu API
+phát hiện phương tiện. - Có thể gồm danh sách phương tiện, ID, loại
+phương tiện, độ tin cậy và tọa độ.
+
+backend/schemas/violation.py (Cường) - Định nghĩa cấu trúc dữ liệu API
+liên quan đến vi phạm. - Có thể gồm phương tiện, loại vi phạm, thời gian
+và nội dung cảnh báo.
+
+3.7. BACKEND/SERVICES - XỬ LÝ NGHIỆP VỤ
+
+backend/services/init.py (Cường) - Đánh dấu services là một Python
+package.
+
+backend/services/video_service.py (Cường) - Quản lý nghiệp vụ liên quan
+đến video. - Ví dụ: tiếp nhận video, kiểm tra thông tin và yêu cầu xử lý
+video.
+
+backend/services/detection_service.py (Cường) - Tiếp nhận yêu cầu nhận
+diện từ API. - Gọi các module xử lý phù hợp và tổng hợp kết quả phát
+hiện, theo dõi và nhận diện sai làn.
+
+backend/services/statistics_service.py (Hiếu) - Tổng hợp và xử lý dữ
+liệu thống kê từ kết quả nhận diện và vi phạm. - Cung cấp số liệu cho
+API thống kê.
+
+3.8. BACKEND/DATABASE - KẾT NỐI VÀ THAO TÁC CƠ SỞ DỮ LIỆU
+
+Các file trong thư mục này chỉ cần triển khai nếu dự án thực sự sử dụng
+cơ sở dữ liệu để lưu thông tin lâu dài. Không nên xây dựng database phức
+tạp nếu phạm vi tiểu luận không cần đến.
+
+backend/database/init.py (Cường) - Đánh dấu database là một Python
+package.
+
+backend/database/connection.py (Cường) - Quản lý việc kết nối đến cơ sở
+dữ liệu. - Chứa logic khởi tạo kết nối và phiên làm việc nếu có sử dụng
+database.
+
+backend/database/repository.py (Cường) - Tập trung các thao tác đọc,
+ghi, cập nhật hoặc xóa dữ liệu. - Ví dụ: lưu thông tin video, phương
+tiện và lịch sử vi phạm.
+
+3.9. BACKEND/UTILS - CÁC HÀM TIỆN ÍCH
+
+backend/utils/init.py (Cường) - Đánh dấu utils là một Python package.
+
+backend/utils/file_handler.py (Cường) - Cung cấp hàm hỗ trợ quản lý
+file. - Ví dụ: kiểm tra file, tạo thư mục, kiểm tra định dạng và xử lý
+đường dẫn lưu trữ.
+
+backend/utils/image_utils.py (Mai) - Chứa các hàm hỗ trợ xử lý hình ảnh
+và khung hình video. - Ví dụ: tính điểm Bottom-center, chuyển đổi định
+dạng ảnh và hỗ trợ thao tác với Polygon.
+
+3.10. FRONTEND - GIAO DIỆN NGƯỜI DÙNG
+
+frontend/index.html (Khoa) - Là trang HTML chính hoặc điểm truy cập ban
+đầu của Frontend. - Có thể hiển thị trang giới thiệu, trang đăng nhập
+nếu có hoặc điều hướng đến các chức năng chính.
+
+frontend/pages/dashboard.html (Khoa) - Xây dựng trang tổng quan hệ
+thống. - Hiển thị thông tin khái quát như số phương tiện, số vi phạm và
+trạng thái hoạt động.
+
+frontend/pages/detection.html (Khoa) - Xây dựng trang nhận diện phương
+tiện. - Cho phép chọn hoặc tải video, theo dõi kết quả xử lý và xem
+thông tin phát hiện, cảnh báo sai làn.
+
+frontend/pages/history.html (Khoa) - Xây dựng trang lịch sử nhận diện và
+vi phạm. - Hiển thị các trường hợp đã ghi nhận để người dùng tra cứu.
+
+frontend/pages/statistics.html (Khoa) - Xây dựng trang thống kê. - Hiển
+thị số liệu và biểu đồ tổng hợp về phương tiện, vi phạm và kết quả xử
+lý.
+
+frontend/assets/css/style.css (Khoa) - Chứa định dạng CSS dùng chung như
+font chữ, màu sắc, bố cục, thanh điều hướng và nút bấm.
+
+frontend/assets/css/dashboard.css (Khoa) - Định dạng riêng cho trang
+tổng quan, bao gồm thẻ thống kê, biểu đồ và bố cục.
+
+frontend/assets/css/detection.css (Khoa) - Định dạng riêng cho trang
+nhận diện, bao gồm khu vực tải video, khung video, thông tin phương tiện
+và cảnh báo.
+
+frontend/assets/js/main.js (Khoa) - Xử lý các chức năng JavaScript dùng
+chung như khởi tạo giao diện, điều hướng và sự kiện chung.
+
+frontend/assets/js/api.js (Khoa) - Tập trung các hàm giao tiếp giữa
+Frontend và Backend qua API. - Gửi yêu cầu, nhận phản hồi và xử lý lỗi
+giao tiếp ở mức phù hợp.
+
+frontend/assets/js/dashboard.js (Khoa) - Lấy dữ liệu từ Backend và cập
+nhật các thành phần trên trang tổng quan.
+
+frontend/assets/js/detection.js (Khoa) - Xử lý thao tác trên trang nhận
+diện như chọn video, tải video, gửi yêu cầu xử lý và hiển thị kết quả.
+
+frontend/assets/js/history.js (Khoa) - Lấy và hiển thị lịch sử nhận
+diện, lịch sử vi phạm từ Backend.
+
+frontend/assets/js/statistics.js (Khoa) - Tiếp nhận dữ liệu thống kê và
+hiển thị dưới dạng bảng hoặc biểu đồ.
+
+frontend/assets/images/ (Khoa) - Chứa tài nguyên hình ảnh dùng trong
+giao diện như logo, biểu tượng và hình minh họa.
+
+frontend/README.md (Khoa) - Giới thiệu riêng về Frontend. - Mô tả cấu
+trúc giao diện, chức năng các trang, công nghệ và cách chạy, kết nối
+Frontend với Backend.
+
+3.11. DATA - DỮ LIỆU ĐẦU VÀO VÀ THỰC NGHIỆM
+
+data/input/ (Mai) - Chứa video đầu vào dùng để hệ thống thực hiện nhận
+diện phương tiện và kiểm tra hành vi đi sai làn.
+
+data/datasets/ (Mai) - Chứa tập dữ liệu phục vụ nghiên cứu, thử nghiệm
+hoặc đánh giá. - Có thể gồm hình ảnh, video và dữ liệu gán nhãn nếu có.
+
+data/samples/ (Mai) - Chứa dữ liệu mẫu dung lượng nhỏ để chạy thử, kiểm
+tra chức năng và minh họa kết quả.
+
+3.12. MODELS Ở THƯ MỤC GỐC - TRỌNG SỐ MÔ HÌNH AI
+
+models/weights/ (Khang) - Chứa file trọng số mô hình YOLO được chương
+trình nạp để phát hiện phương tiện. - Cần thống nhất tên file và đường
+dẫn với cấu hình trong Backend.
+
+models/README.md (Khang) - Giới thiệu mô hình và phiên bản trọng số được
+sử dụng. - Ghi nguồn tải, cách cấu hình đường dẫn và hướng dẫn sử dụng
+mô hình. - Cần lưu ý dung lượng file trọng số khi quản lý trên GitHub.
+
+Lưu ý: models/ ở thư mục gốc chứa trọng số mô hình AI; backend/models/
+chứa các lớp dữ liệu nội bộ. Hai thư mục có mục đích khác nhau.
+
+3.13. STORAGE - DỮ LIỆU PHÁT SINH KHI CHẠY HỆ THỐNG
+
+storage/uploads/ (Cường) - Lưu video người dùng tải lên để Backend xử
+lý.
+
+storage/processed/ (Cường) - Lưu video sau xử lý, có thể bao gồm
+Bounding Box, ID phương tiện, thông tin làn và kết quả nhận diện.
+
+storage/evidence/ (Cường) - Lưu ảnh minh chứng cho các trường hợp nghi
+ngờ hoặc được xác định là vi phạm. - Dùng để kiểm tra, tra cứu và hiển
+thị lịch sử vi phạm.
+
+Lưu ý: data/ chủ yếu chứa dữ liệu chuẩn bị trước để phát triển và thử
+nghiệm; storage/ chứa dữ liệu phát sinh trong quá trình vận hành.
+
+3.14. TESTS - KIỂM THỬ
+
+tests/init.py (Hiếu) - Đánh dấu tests là một Python package.
+
+tests/test_api.py (Hiếu) - Kiểm tra các API của Backend. - Ví dụ: kiểm
+tra trạng thái máy chủ, tải video và truy xuất kết quả.
+
+tests/test_detection.py (Hiếu) - Kiểm tra chức năng phát hiện phương
+tiện bằng YOLO. - Đánh giá việc xác định đối tượng và trả về Bounding
+Box.
+
+tests/test_tracking.py (Hiếu) - Kiểm tra khả năng theo dõi phương tiện
+qua nhiều khung hình. - Kiểm tra tính liên tục và ổn định của track_id.
+
+tests/test_wrong_lane.py (Hiếu) - Kiểm tra chức năng nhận diện phương
+tiện đi sai làn. - Bao gồm trường hợp đi đúng, đi sai và những tình
+huống có thể gây nhận diện nhầm.
+
+3.15. DOCS - TÀI LIỆU KỸ THUẬT
+
+docs/architecture.md (Cường) - Mô tả kiến trúc tổng thể của hệ thống. -
+Trình bày vai trò Frontend, Backend, các module xử lý và cách chúng liên
+kết. - Có thể kèm sơ đồ kiến trúc.
+
+docs/api_documentation.md (Cường) - Mô tả các API của hệ thống. - Gồm
+đường dẫn, phương thức HTTP, dữ liệu đầu vào, dữ liệu đầu ra và chức
+năng của từng API.
+
+docs/algorithms.md (Khang) - Trình bày các thuật toán và phương pháp sử
+dụng trong dự án. - Ví dụ: YOLO, ByteTrack hoặc SORT, Point-in-Polygon
+và quy tắc nhận diện sai làn.
+
+docs/development_guide.md (Khoa) - Hướng dẫn thành viên thiết lập môi
+trường, cài thư viện, chạy chương trình, sử dụng giao diện và tham gia
+phát triển dự án.
+
+3.16. SCRIPTS - CÁC CHƯƠNG TRÌNH HỖ TRỢ
+
+scripts/run_backend.py (Cường) - Cung cấp cách khởi chạy Backend bằng
+script Python. - Giúp đơn giản hóa thao tác chạy máy chủ trong quá trình
+phát triển.
+
+scripts/setup_database.py (Cường) - Hỗ trợ khởi tạo cơ sở dữ liệu, tạo
+bảng hoặc thiết lập cấu trúc lưu trữ. - Chỉ cần triển khai nếu dự án
+thực sự sử dụng database.
+
+============================================================ 4. LUỒNG XỬ
+LÝ TỔNG THỂ ============================================================
+
+Luồng xử lý dự kiến:
+
+1.  Người dùng truy cập Frontend và chọn video cần phân tích.
+2.  Frontend gửi video hoặc yêu cầu xử lý đến Backend thông qua API.
+3.  Backend tiếp nhận video và chuyển cho video_processor.py điều phối.
+4.  detector.py sử dụng YOLO để phát hiện phương tiện trong từng khung
+    hình.
+5.  tracker.py theo dõi phương tiện và gán ID cho từng đối tượng.
+6.  lane_detector.py xác định làn đường dựa trên vùng Polygon đã cấu
+    hình và điểm Bottom-center của Bounding Box.
+7.  wrong_lane_detector.py kiểm tra làn hiện tại, hướng di chuyển, quy
+    tắc lưu thông và lịch sử vị trí để xác định hành vi sai làn.
+8.  alert_manager.py quản lý thông tin cảnh báo và hạn chế cảnh báo
+    trùng lặp.
+9.  Backend tổng hợp kết quả, lưu video hoặc ảnh minh chứng nếu cần và
+    trả dữ liệu về Frontend.
+10. Frontend hiển thị video đã xử lý, thông tin phương tiện, cảnh báo,
+    lịch sử và thống kê.
+
+Sơ đồ khái quát:
+
+                    NGƯỜI DÙNG
+                         |
+                         v
+                     FRONTEND
+                    (Giao diện)
+                         |
+                  Tải video lên
+                         |
+                         v
+                    BACKEND API
+                 (Tiếp nhận yêu cầu)
+                         |
+                         v
+                  VIDEO PROCESSOR
+                (Điều phối xử lý video)
+                         |
+          +--------------+--------------+
+          |              |              |
+          v              v              v
+     YOLO DETECTOR     TRACKER     LANE DETECTOR
+       (Khang)         (Khang)        (Mai)
+          |              |              |
+          +--------------+--------------+
+                         |
+                         v
+               WRONG LANE DETECTOR
+                     (Khang)
+                         |
+                  Kiểm tra vi phạm
+                         |
+                         v
+                  ALERT MANAGER
+                     (Cường)
+                         |
+                         v
+                 TỔNG HỢP KẾT QUẢ
+                         |
+              +----------+----------+
+              |                     |
+              v                     v
+        VIDEO ĐÃ XỬ LÝ         DỮ LIỆU VI PHẠM
+              |                     |
+              +----------+----------+
+                         |
+                         v
+                  LƯU TRỮ KẾT QUẢ
+                         |
+                         v
+                     FRONTEND
+                         |
+          +--------------+--------------+
+          |              |              |
+          v              v              v
+       HIỂN THỊ       LỊCH SỬ        THỐNG KÊ
+        VIDEO         VI PHẠM        KẾT QUẢ
+
+============================================================ 5. QUY ƯỚC
+VÀ LƯU Ý KHI PHÁT TRIỂN
+============================================================
+
+1.  Thống nhất cấu trúc dữ liệu giữa các module trước khi tích hợp. Các
+    trường dữ liệu cơ bản có thể gồm:
+
+    -   track_id: ID theo dõi phương tiện.
+    -   class_name: loại phương tiện.
+    -   confidence: độ tin cậy của kết quả phát hiện.
+    -   bbox: tọa độ Bounding Box.
+    -   bottom_center: điểm giữa cạnh dưới của Bounding Box.
+    -   lane_id: ID làn đường được xác định.
+    -   direction: hướng di chuyển nếu hệ thống xác định được.
+    -   is_violation: trạng thái có vi phạm hay không.
+    -   timestamp: thời điểm ghi nhận.
+
+2.  detector.py chịu trách nhiệm phát hiện đối tượng; tracker.py chịu
+    trách nhiệm theo dõi và gán ID. Không trộn hai nhiệm vụ thành một
+    phần không rõ ràng.
+
+3.  lane_detector.py xác định phương tiện nằm trong vùng làn nào.
+    wrong_lane_detector.py mới là thành phần kiểm tra hành vi có vi phạm
+    quy tắc hay không.
+
+4.  Việc nằm trong một vùng Polygon không đủ để kết luận phương tiện đi
+    sai làn. Cần xét quy tắc lưu thông, hướng di chuyển và lịch sử vị
+    trí; nên yêu cầu tín hiệu vi phạm tồn tại qua nhiều khung hình để
+    giảm cảnh báo nhầm.
+
+5.  video_processor.py điều phối các module, không nên chứa lại toàn bộ
+    thuật toán đã được tách riêng.
+
+6.  Frontend gọi Backend thông qua api.js. Không nên để từng trang tự
+    viết những đoạn gọi API trùng lặp.
+
+7.  Các file init.py có thể để trống nếu không cần nội dung khởi tạo
+    riêng.
+
+8.  Database và setup_database.py chỉ cần triển khai nếu nhóm quyết định
+    sử dụng cơ sở dữ liệu. Không tạo chức năng giả hoặc cấu trúc phức
+    tạp không phục vụ phạm vi đề tài.
+
+9.  Những thư mục chỉ dùng để chứa dữ liệu như input/, samples/,
+    weights/, uploads/ hoặc evidence/ có thể cần file .gitkeep nếu muốn
+    Git lưu lại thư mục rỗng. Không nhất thiết phải đưa video hoặc trọng
+    số dung lượng lớn lên GitHub.
+
+10. Cần thống nhất API, kiểu dữ liệu và đường dẫn file giữa các thành
+    viên trước khi ghép các module để hạn chế lỗi tích hợp.
+
+============================================================ 6. TỔNG
+QUAN PHÂN CHIA TRÁCH NHIỆM
+============================================================
+
+KHOA - Phụ trách toàn bộ Frontend. - Phụ trách
+docs/development_guide.md. - Xây dựng các trang giao diện, CSS,
+JavaScript và phần giao tiếp API ở phía Frontend.
+
+KHANG - Phụ trách module phát hiện phương tiện bằng YOLO. - Phụ trách
+theo dõi phương tiện bằng ByteTrack hoặc SORT. - Phụ trách thuật toán
+nhận diện sai làn và các cấu trúc dữ liệu liên quan. - Phụ trách trọng
+số mô hình và docs/algorithms.md.
+
+CƯỜNG - Phụ trách phần khung Backend, API, điều phối xử lý video và quản
+lý cảnh báo. - Phụ trách các thành phần kết nối, lưu trữ và tài liệu
+kiến trúc/API. - Phụ trách các script hỗ trợ Backend.
+
+MAI - Phụ trách xác định làn đường bằng Polygon. - Phụ trách cấu trúc dữ
+liệu làn, tiện ích xử lý ảnh và dữ liệu đầu vào/thực nghiệm.
+
+HIẾU - Phụ trách API và dịch vụ thống kê. - Phụ trách các file kiểm
+thử. - Phụ trách kiểm tra, tổng hợp và đánh giá kết quả hoạt động của hệ
+thống.
+
+============================================================ 7. KẾT LUẬN
+============================================================
+
+Cấu trúc trên chia dự án thành các phần giao diện, giao tiếp API, xử lý
+thuật toán, quản lý dữ liệu, kiểm thử và tài liệu. Mỗi thành viên chịu
+trách nhiệm chính đối với những file được phân công, đồng thời cần phối
+hợp để thống nhất giao diện dữ liệu giữa các module.
+
+Mục tiêu cuối cùng là xây dựng được quy trình hoàn chỉnh: tiếp nhận
+video giao thông, phát hiện và theo dõi phương tiện, xác định làn đường,
+kiểm tra hành vi đi sai làn, quản lý cảnh báo và hiển thị kết quả trên
+giao diện người dùng.
