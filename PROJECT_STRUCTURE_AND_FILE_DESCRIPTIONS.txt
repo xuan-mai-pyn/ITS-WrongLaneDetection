@@ -20,122 +20,122 @@ THƯ MỤC DỰ ÁN
 
 ITS-WrongLaneDetection/
 │
-├── README.md                         
-├── requirements.txt                  
-├── .gitignore                        
-├── .env.example                      
-├── LICENSE                           
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── .env.example
+├── LICENSE
+├── PROJECT_STRUCTURE_AND_FILE_DESCRIPTIONS.txt
 │
 ├── backend/
-│   ├── __init__.py                   (Cường)
-│   ├── main.py                       (Cường)
-│   ├── config.py                     (Cường)
-│   │
-│   ├── api/
-│   │   ├── __init__.py               (Cường)
-│   │   ├── dependencies.py            (Cường)
-│   │   └── routes/
-│   │       ├── __init__.py           (Cường)
-│   │       ├── health.py              (Cường)
-│   │       ├── video.py               (Cường)
-│   │       ├── detection.py           (Cường)
-│   │       ├── violations.py          (Cường)
-│   │       └── statistics.py          (Hiếu)
-│   │
-│   ├── core/
-│   │   ├── __init__.py                (Cường)
-│   │   ├── detector.py                (Khang)
-│   │   ├── tracker.py                 (Khang)
-│   │   ├── lane_detector.py           (Mai)
-│   │   ├── wrong_lane_detector.py     (Khang)
-│   │   ├── video_processor.py         (Cường)
-│   │   └── alert_manager.py           (Cường)
-│   │
-│   ├── models/
-│   │   ├── __init__.py                (Cường)
-│   │   ├── vehicle.py                 (Khang)
-│   │   ├── lane.py                    (Mai)
-│   │   └── violation.py               (Khang)
-│   │
-│   ├── schemas/
-│   │   ├── __init__.py                (Cường)
-│   │   ├── video.py                   (Cường)
-│   │   ├── detection.py               (Cường)
-│   │   └── violation.py               (Cường)
-│   │
-│   ├── services/
-│   │   ├── __init__.py                (Cường)
-│   │   ├── video_service.py           (Cường)
-│   │   ├── detection_service.py       (Cường)
-│   │   └── statistics_service.py     (Hiếu)
-│   │
-│   ├── database/
-│   │   ├── __init__.py                (Cường)
-│   │   ├── connection.py              (Cường)
-│   │   └── repository.py              (Cường)
-│   │
-│   └── utils/
-│       ├── __init__.py                (Cường)
-│       ├── file_handler.py            (Cường)
-│       └── image_utils.py             (Mai)
+│   ├── __init__.py                        (Cường - 14/11)
+│   ├── main.py                            (Cường - 16/11)
+│   ├── config.py                          (Cường - 14/11)
+│   │
+│   ├── api/
+│   │   ├── __init__.py                    (Cường - 14/11)
+│   │   ├── dependencies.py                (Cường - 16/11)
+│   │   └── routes/
+│   │       ├── __init__.py                (Cường - 14/11)
+│   │       ├── health.py                  (Cường - 15/11)
+│   │       ├── video.py                   (Cường - 17/11)
+│   │       ├── detection.py               (Cường - 17/11)
+│   │       ├── violations.py              (Cường - 17/11)
+│   │       └── statistics.py              (Hiếu - 24/11)
+│   │
+│   ├── core/
+│   │   ├── __init__.py                    (Cường - 14/11)
+│   │   ├── detector.py                    (Khang - 16/11)
+│   │   ├── tracker.py                     (Khang - 17/11)
+│   │   ├── lane_detector.py               (Mai - 16/11)
+│   │   ├── wrong_lane_detector.py         (Khang - 17/11)
+│   │   ├── video_processor.py             (Cường - 17/11)
+│   │   └── alert_manager.py               (Cường - 16/11)
+│   │
+│   ├── models/
+│   │   ├── __init__.py                    (Cường - 14/11)
+│   │   ├── vehicle.py                     (Khang - 15/11)
+│   │   ├── lane.py                        (Mai - 15/11)
+│   │   └── violation.py                   (Khang - 15/11)
+│   │
+│   ├── schemas/
+│   │   ├── __init__.py                    (Cường - 14/11)
+│   │   ├── video.py                       (Cường - 15/11)
+│   │   ├── detection.py                   (Cường - 15/11)
+│   │   └── violation.py                   (Cường - 15/11)
+│   │
+│   ├── services/
+│   │   ├── __init__.py                    (Cường - 15/11)
+│   │   ├── video_service.py               (Cường - 17/11)
+│   │   ├── detection_service.py            (Cường - 17/11)
+│   │   └── statistics_service.py          (Hiếu - 24/11)
+│   │
+│   ├── database/
+│   │   ├── __init__.py                    (Cường - 15/11)
+│   │   ├── connection.py                  (Cường - 18/11)
+│   │   └── repository.py                  (Cường - 19/11)
+│   │
+│   └── utils/
+│       ├── __init__.py                    (Cường - 14/11)
+│       ├── file_handler.py                (Cường - 16/11)
+│       └── image_utils.py                 (Mai - 16/11)
 │
 ├── frontend/
-│   ├── index.html                     (Khoa)
-│   ├── pages/
-│   │   ├── dashboard.html             (Khoa)
-│   │   ├── detection.html              (Khoa)
-│   │   ├── history.html                (Khoa)
-│   │   └── statistics.html             (Khoa)
-│   │
-│   ├── assets/
-│   │   ├── css/
-│   │   │   ├── style.css              (Khoa)
-│   │   │   ├── dashboard.css          (Khoa)
-│   │   │   └── detection.css          (Khoa)
-│   │   │
-│   │   ├── js/
-│   │   │   ├── main.js                (Khoa)
-│   │   │   ├── api.js                 (Khoa)
-│   │   │   ├── dashboard.js           (Khoa)
-│   │   │   ├── detection.js           (Khoa)
-│   │   │   ├── history.js             (Khoa)
-│   │   │   └── statistics.js          (Khoa)
-│   │   │
-│   │   └── images/                    (Khoa)
-│   │
-│   └── README.md                      (Khoa)
+│   ├── index.html                         (Khoa - 15/11)
+│   ├── pages/
+│   │   ├── dashboard.html                 (Khoa - 16/11)
+│   │   ├── detection.html                 (Khoa - 16/11)
+│   │   ├── history.html                   (Khoa - 18/11)
+│   │   └── statistics.html                (Khoa - 18/11)
+│   │
+│   ├── assets/
+│   │   ├── css/
+│   │   │   ├── style.css                  (Khoa - 16/11)
+│   │   │   ├── dashboard.css              (Khoa - 17/11)
+│   │   │   └── detection.css              (Khoa - 17/11)
+│   │   │
+│   │   ├── js/
+│   │   │   ├── main.js                    (Khoa - 16/11)
+│   │   │   ├── api.js                     (Khoa - 17/11)
+│   │   │   ├── dashboard.js               (Khoa - 19/11)
+│   │   │   ├── detection.js               (Khoa - 17/11)
+│   │   │   ├── history.js                 (Khoa - 19/11)
+│   │   │   └── statistics.js              (Khoa - 24/11)
+│   │   │
+│   │   └── images/                        (Khoa - 16/11)
+│   │
+│   └── README.md                          (Khoa - 25/11)
 │
 ├── data/
-│   ├── input/                         (Mai)
-│   ├── datasets/                      (Mai)
-│   └── samples/                       (Mai)
+│   ├── input/                             (Mai - 17/11)
+│   ├── datasets/                          (Mai - 17/11)
+│   └── samples/                           (Mai - 15/11)
 │
 ├── models/
-│   ├── weights/                       (Khang)
-│   └── README.md                      (Khang)
+│   ├── weights/                           (Khang - 16/11)
+│   └── README.md                          (Khang - 17/11)
 │
 ├── storage/
-│   ├── uploads/                       (Cường)
-│   ├── processed/                     (Cường)
-│   └── evidence/                      (Cường)
+│   ├── uploads/                           (Cường - 17/11)
+│   ├── processed/                         (Cường - 17/11)
+│   └── evidence/                          (Cường - 17/11)
 │
 ├── tests/
-│   ├── __init__.py                    (Hiếu)
-│   ├── test_api.py                    (Hiếu)
-│   ├── test_detection.py              (Hiếu)
-│   ├── test_tracking.py               (Hiếu)
-│   └── test_wrong_lane.py             (Hiếu)
+│   ├── __init__.py                        (Hiếu - 17/11)
+│   ├── test_api.py                        (Hiếu - 20/11)
+│   ├── test_detection.py                  (Hiếu - 20/11)
+│   ├── test_tracking.py                   (Hiếu - 20/11)
+│   └── test_wrong_lane.py                 (Hiếu - 20/11)
 │
 ├── docs/
-│   ├── architecture.md                (Cường)
-│   ├── api_documentation.md           (Cường)
-│   ├── algorithms.md                  (Khang)
-│   └── development_guide.md           (Khoa)
+│   ├── architecture.md                    (Cường - 19/11)
+│   ├── api_documentation.md               (Cường - 19/11)
+│   ├── algorithms.md                      (Khang - 17/11)
+│   └── development_guide.md               (Khoa - 19/11)
 │
 └── scripts/
-    ├── run_backend.py                 (Cường)
-    └── setup_database.py              (Cường)
-
+    ├── run_backend.py                     (Cường - 16/11)
+    └── setup_database.py                  (Cường - 18/11)
  
 ============================================================ 3. CHỨC
 NĂNG CÁC FILE VÀ THƯ MỤC
