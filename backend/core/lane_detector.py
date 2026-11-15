@@ -10,7 +10,7 @@ class LaneDetector:
     """Assign image points to explicitly configured lane polygons."""
 
     def __init__(self, lanes: list[Lane] | None = None) -> None:
-        self.lanes = lanes or []
+        self.lanes = lanes if lanes is not None else []
 
     @classmethod
     def from_json(cls, path: Path | None) -> "LaneDetector":
@@ -18,7 +18,14 @@ class LaneDetector:
             return cls()
         if not path.is_file():
             raise FileNotFoundError(f"Lane configuration was not found: {path}")
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Lane configuration contains invalid JSON: {path}") from exc
+
+        if not isinstance(payload, dict):
+            raise ValueError("Lane configuration must be a JSON object.")
+
         raw_lanes = payload.get("lanes")
         if not isinstance(raw_lanes, list):
             raise ValueError("Lane configuration must contain a 'lanes' array.")
@@ -28,5 +35,5 @@ class LaneDetector:
         """Return the first lane containing the image point, if any."""
         for lane in self.lanes:
             if lane.contains(point):
-                return lane.id
+                return lane.lane_id
         return None
