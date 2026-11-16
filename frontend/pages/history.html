@@ -1,13 +1,82 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Video history · ITS Wrong-Lane Detection</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script defer src="/assets/js/api.js"></script><script defer src="/assets/js/main.js"></script><script defer src="/assets/js/history.js"></script>
-  </head>
-  <body data-page="history">
-    <aside class="sidebar"><a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a><nav aria-label="Main navigation"><a class="nav-link" href="/dashboard">Overview</a><a class="nav-link" href="/detection">New analysis</a><a class="nav-link active" href="/history">Video history</a><a class="nav-link" href="/statistics">Statistics</a></nav><div class="sidebar-note">History reflects saved video and task records in the local SQLite database.</div></aside>
-    <main class="main-content"><header class="topbar"><div><p class="eyebrow">RECORDS</p><h1>Video history</h1></div><a class="button button-primary" href="/detection">New analysis</a></header><section class="page-intro"><div><h2>Uploaded videos</h2><p>Processing failures are shown and are not counted as completed results.</p></div></section><section class="content-card"><div class="table-wrap"><table><thead><tr><th>Video</th><th>Uploaded</th><th>State</th><th>Processing time</th><th>Frames</th><th>Vehicles</th><th>Violations</th></tr></thead><tbody id="history-videos"><tr><td colspan="7" class="empty-state">Loading videos…</td></tr></tbody></table></div></section><section class="content-card"><div class="section-heading"><div><h2>Recent violations</h2><p>Recorded only when configured lane rules are evaluated</p></div></div><div class="table-wrap"><table><thead><tr><th>Vehicle ID</th><th>Transition</th><th>Video</th><th>Time</th></tr></thead><tbody id="history-violations"><tr><td colspan="4" class="empty-state">Loading violations…</td></tr></tbody></table></div></section><div id="toast" class="toast" role="status" aria-live="polite"></div></main>
-  </body>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch sử nhận diện - ITS Wrong-Lane Detection</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>ITS Detection</h2>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/detection">Nhận diện</a>
+      <a href="/history" class="active">Lịch sử</a>
+      <a href="/statistics">Thống kê</a>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Lịch sử nhận diện &amp; Vi phạm</h1>
+        <p>Tra cứu danh sách video đã xử lý và nhật ký phương tiện đi sai làn đường</p>
+      </div>
+
+      <section class="panel">
+        <h3>Video đã tải lên</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên file</th>
+                <th>Ngày tải lên</th>
+                <th>Trạng thái</th>
+                <th>Thời gian xử lý</th>
+                <th>Số frame</th>
+                <th>Tổng xe</th>
+                <th>Vi phạm</th>
+              </tr>
+            </thead>
+            <tbody id="history-videos"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+          <h3 style="margin: 0;">Vi phạm ghi nhận gần đây</h3>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="history-search" placeholder="Tìm theo làn đường hoặc mã..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+            <select id="history-vehicle-filter" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: #fff;">
+              <option value="all">Tất cả loại xe</option>
+              <option value="car">Ô tô (Car)</option>
+              <option value="motorcycle">Xe máy (Motorcycle)</option>
+              <option value="bus">Xe buýt (Bus)</option>
+              <option value="truck">Xe tải (Truck)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Video</th>
+                <th>Loại xe</th>
+                <th>Làn vi phạm</th>
+                <th>Thời điểm</th>
+              </tr>
+            </thead>
+            <tbody id="history-violations"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/history.js"></script>
+</body>
 </html>
