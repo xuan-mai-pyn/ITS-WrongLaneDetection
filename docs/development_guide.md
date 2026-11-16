@@ -1,17 +1,20 @@
-# Development guide
+# Development Guide
 
-## Local setup
+Hướng dẫn cài đặt môi trường, khởi chạy hệ thống và quy chuẩn mở rộng dự án **ITS-WrongLaneDetection**.
 
-Use Python 3.10+ and install `requirements.txt` in a virtual environment. Copy `.env.example` to `.env`; configure a local weights file and, when needed, a JSON lane configuration. Start the API with `python scripts\run_backend.py`. Swagger is available at `/docs`.
+---
 
-## Database and tests
+## 1. Local Setup (Cài đặt môi trường & Chạy Backend)
 
-Run `python scripts\setup_database.py` to initialize SQLite. Run `python -m unittest discover -s tests -v` for the standard-library test suite. Tests use temporary directories and do not require model weights.
+1. **Yêu cầu hệ thống:**
+   - Cài đặt **Python 3.10+** trên máy.
 
-## Extending the pipeline
+2. **Tạo môi trường ảo (Virtual Environment) và cài đặt thư viện:**
+   ```bash
+   python -m venv venv
+   # Kích hoạt trên Windows:
+   venv\Scripts\activate
+   # Kích hoạt trên macOS/Linux:
+   source venv/bin/activate
 
-- Keep API transport schemas separate from domain and processing logic.
-- Add camera-specific lane geometry/rules to external configuration; do not infer them from object detection.
-- Preserve explicit task failure and progress information.
-- Do not record a violation unless a configured rule and frame-confirmation threshold are both satisfied.
-- Keep large/private videos, datasets, model weights, local databases, and `.env` files out of version control.
+   pip install -r requirements.txt
