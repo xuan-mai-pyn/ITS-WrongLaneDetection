@@ -1,19 +1,41 @@
-window.showToast = function (message, isError = false) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.toggle("error", isError);
-  toast.classList.add("visible");
-  window.setTimeout(() => toast.classList.remove("visible"), 3600);
-};
+document.addEventListener("DOMContentLoaded", () => {
+  highlightActiveNav();
+  initBackendHealthIndicator();
+});
 
-window.formatDate = function (value) {
-  if (!value) return "—";
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString();
-};
+function highlightActiveNav() {
+  const currentPath = window.location.pathname;
+  const navLinks = document.querySelectorAll(".sidebar a");
+  navLinks.forEach((link) => {
+    const href = link.getAttribute("href");
+    if (href && (currentPath === href || currentPath.endsWith(href))) {
+      link.classList.add("active");
+    }
+  });
+}
 
-window.statusTag = function (status) {
-  const safe = String(status || "unknown");
-  return `<span class="tag ${safe}">${safe}</span>`;
-};
+async function initBackendHealthIndicator() {
+  const sidebar = document.querySelector(".sidebar");
+  if (!sidebar) return;
+
+  const badge = document.createElement("div");
+  badge.className = "backend-status-badge";
+  badge.innerHTML = `<span class="status-dot" id="apiStatusDot"></span><span id="apiStatusText">Đang kiểm tra API...</span>`;
+  sidebar.appendChild(badge);
+
+  const dot = document.getElementById("apiStatusDot");
+  const text = document.getElementById("apiStatusText");
+
+  try {
+    const res = await fetch("/api/health");
+    if (res.ok) {
+      dot.classList.add("online");
+      text.textContent = "Backend API: Online";
+    } else {
+      throw new Error("Non-200 response");
+    }
+  } catch (err) {
+    dot.classList.add("offline");
+    text.textContent = "Backend API: Offline";
+  }
+}
