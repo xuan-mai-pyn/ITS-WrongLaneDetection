@@ -1,13 +1,72 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Statistics · ITS Wrong-Lane Detection</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script defer src="/assets/js/api.js"></script><script defer src="/assets/js/main.js"></script><script defer src="/assets/js/statistics.js"></script>
-  </head>
-  <body data-page="statistics">
-    <aside class="sidebar"><a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a><nav aria-label="Main navigation"><a class="nav-link" href="/dashboard">Overview</a><a class="nav-link" href="/detection">New analysis</a><a class="nav-link" href="/history">Video history</a><a class="nav-link active" href="/statistics">Statistics</a></nav><div class="sidebar-note">Statistics are calculated from completed tasks stored by this application.</div></aside>
-    <main class="main-content"><header class="topbar"><div><p class="eyebrow">MEASUREMENTS</p><h1>Statistics</h1></div></header><section class="page-intro"><div><h2>Processing summary</h2><p>No sample or synthetic results are included.</p></div></section><section class="stat-grid"><article class="stat-card"><span>Processed videos</span><strong id="processed-videos">—</strong><small>Completed analysis tasks</small></article><article class="stat-card"><span>Unique tracked vehicles</span><strong id="total-vehicles">—</strong><small>Sum of completed video results</small></article><article class="stat-card"><span>Recorded violations</span><strong id="total-violations">—</strong><small>Based on configured rules</small></article><article class="stat-card"><span>Video violation rate</span><strong id="detection-rate">—</strong><small>Completed videos with violations</small></article></section><section class="content-card"><div class="section-heading"><div><h2>Available measurements</h2><p>Current aggregate values from SQLite</p></div></div><div id="statistics-breakdown" class="bar-list"><p class="empty-state">Loading statistics…</p></div></section><div id="toast" class="toast" role="status" aria-live="polite"></div></main>
-  </body>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thống kê · ITS Wrong-Lane Detection</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+  <script defer src="/assets/js/api.js"></script>
+  <script defer src="/assets/js/main.js"></script>
+  <script defer src="/assets/js/statistics.js"></script>
+</head>
+<body data-page="statistics">
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>ITS Detection</h2>
+      <a class="nav-link" href="/dashboard">Overview</a>
+      <a class="nav-link" href="/detection">New analysis</a>
+      <a class="nav-link" href="/history">Video history</a>
+      <a class="nav-link active" href="/statistics">Statistics</a>
+      <div class="sidebar-note" style="font-size: 0.8rem; color: #94a3b8; margin-top: 12px;">
+        Statistics are calculated from completed tasks stored by this application.
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Thống kê tổng hợp (Statistics)</h1>
+        <p>Dữ liệu tổng hợp thực tế từ các tác vụ phân tích đã hoàn thành trong SQLite</p>
+      </div>
+
+      <section class="card-grid">
+        <article class="stat-card">
+          <h3>Processed videos</h3>
+          <p id="processed-videos">—</p>
+          <small style="color: var(--text-muted);">Completed analysis tasks</small>
+        </article>
+        <article class="stat-card">
+          <h3>Unique tracked vehicles</h3>
+          <p id="total-vehicles">—</p>
+          <small style="color: var(--text-muted);">Sum of completed video results</small>
+        </article>
+        <article class="stat-card">
+          <h3>Recorded violations</h3>
+          <p id="total-violations">—</p>
+          <small style="color: var(--text-muted);">Based on configured rules</small>
+        </article>
+        <article class="stat-card">
+          <h3>Video violation rate</h3>
+          <p id="detection-rate">—</p>
+          <small style="color: var(--text-muted);">Completed videos with violations</small>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div>
+            <h2 style="margin: 0 0 4px; font-size: 1.15rem;">Available measurements</h2>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">Current aggregate values from SQLite</p>
+          </div>
+          <span class="tag ok">Live SQLite Data</span>
+        </div>
+        <div id="statistics-breakdown" class="bar-list">
+          <p class="empty-state">Loading statistics…</p>
+        </div>
+      </section>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+</body>
 </html>
