@@ -39,3 +39,39 @@ async function initBackendHealthIndicator() {
     text.textContent = "Backend API: Offline";
   }
 }
+
+function formatDate(isoString) {
+  if (!isoString) return "—";
+  try {
+    return new Date(isoString).toLocaleString("vi-VN");
+  } catch (e) {
+    return String(isoString);
+  }
+}
+
+function statusTag(status) {
+  const normalized = String(status || "pending").toLowerCase();
+  const cls =
+    normalized === "completed"
+      ? "ok"
+      : normalized === "failed" || normalized === "error"
+      ? "danger"
+      : "warn";
+  return `<span class="tag ${cls}">${normalized}</span>`;
+}
+
+function showToast(message, isError = false) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+    padding: 12px 18px; border-radius: 8px; font-size: 0.9rem; font-weight: 500;
+    color: #fff; background: ${isError ? "#dc2626" : "#16a34a"};
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18); opacity: 1; transition: opacity 0.3s ease;
+  `;
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    toast.style.opacity = "0";
+  }, 3500);
+}
