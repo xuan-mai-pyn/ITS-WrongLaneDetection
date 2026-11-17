@@ -85,5 +85,94 @@ class ApiTests(unittest.TestCase):
         self.assertTrue(required_paths.issubset(paths))
 
 
+    def upload_video(self, filename="sample.mp4", payload=b"video payload"):
+        response = self.client.post("/api/videos/upload",
+            files={"file": (filename, payload, "video/mp4")})
+        self.assertEqual(response.status_code, 201)
+        return response.json()
+
+    def test_upload_roundtrip_persists_bytes_and_metadata(self):
+        video = self.upload_video("SAMPLE.MP4", b"123456")
+        detail = self.client.get(f"/api/videos/{video['id']}")
+        self.assertEqual(detail.status_code, 200)
+        self.assertEqual(detail.json(), video)
+        self.assertEqual(video["size_bytes"], 6)
+        repository = self.client.app.state.repository
+        self.assertEqual(repository.get_video_path(video["id"]).read_bytes(), b"123456")
+        with TestClient(create_app(self.client.app.state.settings)) as reopened:
+            self.assertEqual(reopened.get("/api/videos").json(), [video])
+
+    def test_invalid_uploads_leave_no_files_or_records(self):
+        from dataclasses import replace
+        app = self.client.app
+        app.state.settings = replace(app.state.settings, max_upload_bytes=4)
+        for filename, payload in [("sample.txt", b"abc"), ("sample.mp4", b""),
+                                  ("sample.mp4", b"12345")]:
+            with self.subTest(filename=filename, payload=payload):
+                response = self.client.post("/api/videos/upload",
+                    files={"file": (filename, payload, "video/mp4")})
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(self.client.get("/api/videos").json(), [])
+                self.assertEqual(list(app.state.settings.upload_dir.iterdir()), [])
+
+    def test_unknown_resources_return_404(self):
+        for path in ["/api/videos/missing", "/api/detection/missing/status",
+                     "/api/detection/missing/result", "/api/detection/missing/video"]:
+            with self.subTest(path=path):
+                self.assertEqual(self.client.get(path).status_code, 404)
+
+    def test_request_validation(self):
+        self.assertEqual(self.client.post("/api/detection/start", json={}).status_code, 422)
+        self.assertEqual(self.client.post("/api/videos/upload").status_code, 422)
+        for limit in (0, 501, "invalid"):
+            with self.subTest(limit=limit):
+                self.assertEqual(self.client.get("/api/violations", params={"limit": limit}).status_code, 422)
+
+    def test_pending_and_failed_task_results(self):
+        video = self.upload_video()
+        repository = self.client.app.state.repository
+        task = repository.create_task("pending", video["id"])
+        self.assertEqual(self.client.get(f"/api/detection/{task.id}/result").status_code, 409)
+        self.assertEqual(self.client.get(f"/api/detection/{task.id}/video").status_code, 404)
+        repository.update_task(task.id, status="failed", error="Cannot decode video")
+        response = self.client.get(f"/api/detection/{task.id}/result")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["error"], "Cannot decode video")
+        self.assertIsNone(response.json()["result"])
+
+    def test_completed_result_video_violations_and_statistics(self):
+        from backend.models.violation import Violation
+        video = self.upload_video()
+        repository = self.client.app.state.repository
+        task = repository.create_task("completed", video["id"])
+        output = self.client.app.state.settings.processed_dir / "completed.mp4"
+        output.write_bytes(b"processed video fixture")
+        repository.save_violations(task.id, video["id"], [Violation(
+            track_id=7, source_lane="a", destination_lane="b",
+            frame_index=20, timestamp_seconds=1.0)])
+        repository.update_video_metrics(video["id"], processing_seconds=0.5,
+            vehicle_type_counts={"car": 2}, processed_frames=30,
+            vehicle_count=2, violation_count=1)
+        repository.update_task(task.id, status="completed", progress=100,
+            result={"violation_count": 1}, output_path=output)
+        response = self.client.get(f"/api/detection/{task.id}/result")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["result"], {"violation_count": 1})
+        downloaded = self.client.get(response.json()["video_url"])
+        self.assertEqual(downloaded.status_code, 200)
+        self.assertEqual(downloaded.content, output.read_bytes())
+        self.assertEqual(downloaded.headers["content-type"], "video/mp4")
+        violations = self.client.get("/api/violations?limit=1").json()
+        self.assertEqual(len(violations), 1)
+        self.assertEqual(violations[0]["track_id"], 7)
+        self.assertEqual(violations[0]["video_id"], video["id"])
+        self.assertEqual(self.client.get("/api/statistics").json(), {
+            "total_videos": 1, "processed_videos": 1, "total_vehicles": 2,
+            "total_violations": 1, "videos_with_violations": 1,
+            "vehicle_types": {"car": 2}, "detection_rate": 1.0})
+        output.unlink()
+        self.assertEqual(self.client.get(response.json()["video_url"]).status_code, 404)
+
+
 if __name__ == "__main__":
     unittest.main()
