@@ -1,101 +1,88 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>New analysis · ITS Wrong-Lane Detection</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/detection.css">
-    <script defer src="/assets/js/api.js"></script>
-    <script defer src="/assets/js/main.js"></script>
-    <script defer src="/assets/js/detection.js"></script>
-  </head>
-  <body data-page="detection">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhận diện video - Hệ thống giám sát sai làn ITS</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/detection.css">
+</head>
+<body>
+  <div class="layout">
     <aside class="sidebar">
-      <a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a>
-      <nav aria-label="Main navigation">
-        <a class="nav-link" href="/dashboard">Overview</a><a class="nav-link active" href="/detection">New analysis</a><a class="nav-link" href="/history">Video history</a><a class="nav-link" href="/statistics">Statistics</a>
+      <div class="sidebar-brand">
+        <h2>Giám Sát Giao Thông</h2>
+        <span>Phát hiện phương tiện sai làn</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard">Bảng điều khiển</a>
+        <a href="/detection" class="active">Nhận diện video</a>
+        <a href="/history">Lịch sử vi phạm</a>
+        <a href="/statistics">Thống kê báo cáo</a>
       </nav>
-      <div class="sidebar-note">Processing requires local YOLO weights. Without lane rules, analysis is detection-only.</div>
     </aside>
-    <main class="main-content">
-      <header class="topbar"><div><p class="eyebrow">VIDEO WORKFLOW</p><h1>New analysis</h1></div><a class="button button-secondary" href="/history">View history</a></header>
-      <section class="page-intro"><div><h2>Upload a traffic video</h2><p>Accepted formats: MP4, AVI, MOV, and MKV.</p></div></section>
-      <section class="workflow-grid">
-        <article class="content-card">
-          <div class="section-heading"><div><h2>Video source</h2><p>Select a local video to begin</p></div></div>
-          <label class="upload-zone" for="video-file"><span class="upload-icon">↑</span><strong>Choose a video file</strong><span>Maximum upload size is configured by the server.</span><input id="video-file" type="file" accept="video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,.mkv"></label>
-          <video id="input-preview" class="video-preview" controls hidden></video>
-          <div class="file-meta" id="file-meta"></div>
-          <button id="start-analysis" class="button button-primary" type="button" disabled>Upload &amp; start analysis</button>
-        </article>
-        <article class="content-card result-card">
-          <div class="section-heading"><div><h2>Processing status</h2><p id="task-message">No task started yet.</p></div><span id="task-status" class="tag">Waiting</span></div>
-          <div class="progress-track"><div id="task-progress" class="progress-fill"></div></div>
-          <div class="progress-label"><span id="progress-value">0%</span><span id="frame-value">0 frames</span></div>
-          <div id="result-summary" class="result-summary">Results will appear here after processing.</div>
-          <video id="output-video" class="video-preview" controls hidden></video>
-        </article>
-      </section>
 
-      <!-- Khu vực thông báo cảnh báo vi phạm (Mục 4.3.2) -->
-      <section id="violation-alert-box" style="margin-top: 20px; padding: 16px; background: #fef2f2; border-left: 5px solid #dc2626; border-radius: 8px; color: #991b1b;">
-        <strong>⚠ CẢNH BÁO VI PHẠM GIAO THÔNG:</strong>
-        <span id="violation-alert-text">Phát hiện 02 phương tiện đi sai làn đường quy định (Track ID #14 - Ô tô con, Track ID #27 - Xe tải).</span>
-      </section>
-
-      <!-- Khu vực hiển thị thông tin chi tiết phương tiện (Mục 4.3.2) -->
-      <section class="content-card" style="margin-top: 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
-        <div class="section-heading">
-          <div>
-            <h2>Thông tin phương tiện &amp; Trạng thái làn đường</h2>
-            <p>Chi tiết nhận diện đối tượng, làn đường di chuyển và trạng thái vi phạm</p>
-          </div>
+    <div class="content-wrapper">
+      <header class="top-header">
+        <div class="top-header-title">Hệ thống Giao thông Thông minh (ITS) — Phân tích vi phạm làn đường</div>
+        <div class="top-header-meta">
+          <span id="header-clock"></span>
         </div>
-        <table style="width: 100%; border-collapse: collapse; font-size: 14px; text-align: left;">
-          <thead>
-            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #475569;">
-              <th style="padding: 10px;">Track ID</th>
-              <th style="padding: 10px;">Loại phương tiện</th>
-              <th style="padding: 10px;">Làn xuất phát</th>
-              <th style="padding: 10px;">Làn hiện tại</th>
-              <th style="padding: 10px;">Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody id="vehicle-info-tbody">
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 10px;"><strong>#11</strong></td>
-              <td style="padding: 10px;">Ô tô con (Car)</td>
-              <td style="padding: 10px;">Làn 1 (Ô tô)</td>
-              <td style="padding: 10px;">Làn 1 (Ô tô)</td>
-              <td style="padding: 10px;"><span style="background:#dcfce7; color:#15803d; padding:4px 8px; border-radius:4px; font-weight:600;">Bình thường</span></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e2e8f0; background: #fff5f5;">
-              <td style="padding: 10px;"><strong>#14</strong></td>
-              <td style="padding: 10px;">Ô tô con (Car)</td>
-              <td style="padding: 10px;">Làn 1 (Ô tô)</td>
-              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
-              <td style="padding: 10px;"><span style="background:#fee2e2; color:#b91c1c; padding:4px 8px; border-radius:4px; font-weight:600;">Vi phạm sai làn</span></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 10px;"><strong>#19</strong></td>
-              <td style="padding: 10px;">Xe máy (Motorbike)</td>
-              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
-              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
-              <td style="padding: 10px;"><span style="background:#dcfce7; color:#15803d; padding:4px 8px; border-radius:4px; font-weight:600;">Bình thường</span></td>
-            </tr>
-            <tr style="background: #fff5f5;">
-              <td style="padding: 10px;"><strong>#27</strong></td>
-              <td style="padding: 10px;">Xe tải (Truck)</td>
-              <td style="padding: 10px;">Làn 2 (Hỗn hợp)</td>
-              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
-              <td style="padding: 10px;"><span style="background:#fee2e2; color:#b91c1c; padding:4px 8px; border-radius:4px; font-weight:600;">Vi phạm sai làn</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      </header>
 
-      <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    </main>
-  </body>
+      <main class="main-content">
+        <div class="page-header">
+          <div>
+            <h1>Nhận diện phương tiện sai làn</h1>
+            <p>Tải video giao thông lên hệ thống để tự động phát hiện và ghi nhận vi phạm</p>
+          </div>
+          <a href="/history" class="btn btn-outline">Xem lịch sử nhận diện</a>
+        </div>
+
+        <div class="workflow-grid">
+          <section class="panel">
+            <div class="panel-header">
+              <h3>1. Chọn video đầu vào</h3>
+            </div>
+            <label class="upload-zone" for="video-file">
+              <strong>Nhấn để chọn tệp video giao thông</strong>
+              <span class="subtitle">Hỗ trợ định dạng MP4, AVI, MOV</span>
+              <input type="file" id="video-file" accept="video/*">
+            </label>
+            <p id="file-meta" class="subtitle" style="margin-bottom: 12px;">Chưa chọn tệp video nào.</p>
+            <button type="button" id="start-analysis" class="btn btn-primary" style="width: 100%;">Bắt đầu phân tích video</button>
+            <video id="input-preview" class="video-preview" controls></video>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h3>2. Tiến trình &amp; Kết quả xử lý</h3>
+              <span id="task-status" class="tag warn">Sẵn sàng</span>
+            </div>
+            <p id="task-message" class="subtitle">Vui lòng tải video lên và nhấn nút bắt đầu phân tích.</p>
+            <div class="progress-track">
+              <div id="task-progress" class="progress-fill"></div>
+            </div>
+            <div class="progress-label">
+              <span>Tiến độ: <strong id="progress-value">0%</strong></span>
+              <span>Khung hình: <strong id="frame-value">0 / 0</strong></span>
+            </div>
+            <div id="result-summary" class="result-summary">Chưa có kết quả phân tích.</div>
+            <video id="output-video" class="video-preview" controls></video>
+          </section>
+        </div>
+      </main>
+
+      <footer class="app-footer">
+        <span>Đồ án Hệ thống Giao thông Thông minh (ITS) — Phát hiện đi sai làn đường</span>
+        <span>Phiên bản giao diện v1.0</span>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/detection.js"></script>
+</body>
 </html>
