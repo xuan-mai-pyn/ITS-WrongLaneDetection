@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   highlightActiveNav();
   initBackendHealthIndicator();
+  updateHeaderClock();
 });
 
 function highlightActiveNav() {
@@ -14,13 +15,29 @@ function highlightActiveNav() {
   });
 }
 
+function updateHeaderClock() {
+  const clockEl = document.getElementById("header-clock");
+  if (!clockEl) return;
+  const renderTime = () => {
+    clockEl.textContent = new Date().toLocaleString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+  renderTime();
+  setInterval(renderTime, 30000);
+}
+
 async function initBackendHealthIndicator() {
   const sidebar = document.querySelector(".sidebar");
   if (!sidebar) return;
 
   const badge = document.createElement("div");
   badge.className = "backend-status-badge";
-  badge.innerHTML = `<span class="status-dot" id="apiStatusDot"></span><span id="apiStatusText">Đang kiểm tra API...</span>`;
+  badge.innerHTML = `<span class="status-dot" id="apiStatusDot"></span><span id="apiStatusText">Đang kiểm tra máy chủ...</span>`;
   sidebar.appendChild(badge);
 
   const dot = document.getElementById("apiStatusDot");
@@ -30,13 +47,13 @@ async function initBackendHealthIndicator() {
     const res = await fetch("/api/health");
     if (res.ok) {
       dot.classList.add("online");
-      text.textContent = "Backend API: Online";
+      text.textContent = "Máy chủ API: Hoạt động";
     } else {
-      throw new Error("Non-200 response");
+      throw new Error("Lỗi kết nối");
     }
   } catch (err) {
     dot.classList.add("offline");
-    text.textContent = "Backend API: Offline";
+    text.textContent = "Máy chủ API: Ngoại tuyến";
   }
 }
 
@@ -51,13 +68,16 @@ function formatDate(isoString) {
 
 function statusTag(status) {
   const normalized = String(status || "pending").toLowerCase();
-  const cls =
-    normalized === "completed"
-      ? "ok"
-      : normalized === "failed" || normalized === "error"
-      ? "danger"
-      : "warn";
-  return `<span class="tag ${cls}">${normalized}</span>`;
+  if (normalized === "completed") {
+    return `<span class="tag ok">Hoàn thành</span>`;
+  }
+  if (normalized === "processing" || normalized === "running") {
+    return `<span class="tag warn">Đang xử lý</span>`;
+  }
+  if (normalized === "failed" || normalized === "error") {
+    return `<span class="tag danger">Lỗi xử lý</span>`;
+  }
+  return `<span class="tag warn">Chờ xử lý</span>`;
 }
 
 function showToast(message, isError = false) {
