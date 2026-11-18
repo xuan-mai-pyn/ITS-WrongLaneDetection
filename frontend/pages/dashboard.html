@@ -1,44 +1,122 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard · ITS Wrong-Lane Detection</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/dashboard.css">
-    <script defer src="/assets/js/api.js"></script>
-    <script defer src="/assets/js/main.js"></script>
-    <script defer src="/assets/js/dashboard.js"></script>
-  </head>
-  <body data-page="dashboard">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng điều khiển - Hệ thống giám sát sai làn ITS</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+  <div class="layout">
     <aside class="sidebar">
-      <a class="brand" href="/dashboard"><span class="brand-mark">ITS</span><span>Traffic Vision<small>Wrong-lane analysis</small></span></a>
-      <nav aria-label="Main navigation">
-        <a class="nav-link active" href="/dashboard">Overview</a>
-        <a class="nav-link" href="/detection">New analysis</a>
-        <a class="nav-link" href="/history">Video history</a>
-        <a class="nav-link" href="/statistics">Statistics</a>
+      <div class="sidebar-brand">
+        <h2>Giám Sát Giao Thông</h2>
+        <span>Phát hiện phương tiện sai làn</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="active">Bảng điều khiển</a>
+        <a href="/detection">Nhận diện video</a>
+        <a href="/history">Lịch sử vi phạm</a>
+        <a href="/statistics">Thống kê báo cáo</a>
       </nav>
-      <div class="sidebar-note">Camera-specific lane configuration is required to evaluate wrong-lane behavior.</div>
     </aside>
-    <main class="main-content">
-      <header class="topbar"><div><p class="eyebrow">TRAFFIC OPERATIONS</p><h1>Overview</h1></div><a class="button button-primary" href="/detection">Analyze a video</a></header>
-      <section class="page-intro"><div><h2>Analysis dashboard</h2><p>Review data recorded by completed video-processing tasks.</p></div><span class="status-pill"><span class="status-dot"></span> API connected</span></section>
-      <section class="stat-grid" aria-label="Processing summary">
-        <article class="stat-card"><span>Videos processed</span><strong id="processed-videos">—</strong><small>Completed tasks only</small></article>
-        <article class="stat-card"><span>Tracked vehicles</span><strong id="total-vehicles">—</strong><small>Unique tracker IDs</small></article>
-        <article class="stat-card"><span>Recorded violations</span><strong id="total-violations">—</strong><small>Configured rules only</small></article>
-        <article class="stat-card"><span>Video violation rate</span><strong id="detection-rate">—</strong><small>Completed videos with violations</small></article>
-      </section>
-      <section class="content-card">
-        <div class="section-heading"><div><h2>Recent videos</h2><p>Latest uploads and their processing state</p></div><a href="/history" class="text-link">View history →</a></div>
-        <div class="table-wrap"><table><thead><tr><th>Video</th><th>Uploaded</th><th>Status</th><th>Vehicles</th><th>Violations</th></tr></thead><tbody id="recent-videos"><tr><td colspan="5" class="empty-state">Loading videos…</td></tr></tbody></table></div>
-      </section>
-      <section class="content-card">
-        <div class="section-heading"><div><h2>Recorded totals</h2><p>Aggregates from completed processing tasks</p></div></div>
-        <div id="dashboard-chart" class="bar-list"><p class="empty-state">Loading statistics…</p></div>
-      </section>
-      <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    </main>
-  </body>
+
+    <div class="content-wrapper">
+      <header class="top-header">
+        <div class="top-header-title">Hệ thống Giao thông Thông minh (ITS) — Phân tích vi phạm làn đường</div>
+        <div class="top-header-meta">
+          <span id="header-clock"></span>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="page-header">
+          <div>
+            <h1>Bảng điều khiển tổng quan</h1>
+            <p>Theo dõi nhanh tình trạng xử lý video, lưu lượng phương tiện và vi phạm sai làn</p>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="button" id="refresh-dashboard" class="btn btn-outline">Làm mới dữ liệu</button>
+            <a href="/detection" class="btn btn-primary">+ Tải video nhận diện</a>
+          </div>
+        </div>
+
+        <section class="action-bar">
+          <a href="/detection" class="action-card-btn">
+            <strong>Phân tích video mới</strong>
+            <span>Tải video giao thông lên và chạy mô hình nhận diện sai làn</span>
+          </a>
+          <a href="/history" class="action-card-btn">
+            <strong>Tra cứu lịch sử</strong>
+            <span>Xem danh sách video đã xử lý và lọc chi tiết từng xe vi phạm</span>
+          </a>
+          <a href="/statistics" class="action-card-btn">
+            <strong>Báo cáo thống kê</strong>
+            <span>Phân tích tỷ lệ vi phạm theo từng nhóm phương tiện giao thông</span>
+          </a>
+        </section>
+
+        <section class="card-grid">
+          <div class="stat-card">
+            <span>Video đã xử lý</span>
+            <strong id="processed-videos">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Tổng phương tiện</span>
+            <strong id="total-vehicles">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Tổng lượt vi phạm</span>
+            <strong id="total-violations">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Tỷ lệ phát hiện</span>
+            <strong id="detection-rate">0%</strong>
+          </div>
+        </section>
+
+        <section class="dashboard-split">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Biểu đồ tổng hợp chỉ số</h3>
+            </div>
+            <div id="dashboard-chart"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Video xử lý gần đây</h3>
+              <a href="/history" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.83rem;">Xem tất cả</a>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tên tệp video</th>
+                    <th>Thời gian tải lên</th>
+                    <th>Trạng thái</th>
+                    <th>Số xe</th>
+                    <th>Vi phạm</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-videos"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>Đồ án Hệ thống Giao thông Thông minh (ITS) — Phát hiện đi sai làn đường</span>
+        <span>Phiên bản giao diện v1.0</span>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/dashboard.js"></script>
+</body>
 </html>
