@@ -1,12 +1,42 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="refresh" content="0; url=/dashboard">
-    <title>ITS Wrong-Lane Detection</title>
-  </head>
-  <body>
-    <p>Opening the <a href="/dashboard">dashboard</a>…</p>
-  </body>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="1; url=/dashboard">
+  <title>ITS Wrong-Lane Detection - Đang khởi động</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid rgba(59, 130, 246, 0.25);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    h1 { font-size: 1.25rem; margin: 0 0 6px; letter-spacing: 0.3px; }
+    p { font-size: 0.9rem; color: #94a3b8; margin: 0; }
+    a { color: #60a5fa; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <h1>ITS Wrong-Lane Detection System</h1>
+  <p>Đang chuyển hướng tới Bảng điều khiển... <a href="/dashboard">Nhấn vào đây nếu trang không tự chuyển</a></p>
+</body>
 </html>

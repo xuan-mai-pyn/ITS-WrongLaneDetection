@@ -1,29 +1,60 @@
-/* Thin REST client shared by the dashboard pages. */
+async function requestJson(url, options = {}) {
+  const response = await fetch(url, options);
+  let payload = null;
+  try {
+    payload = await response.json();
+  } catch (e) {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    const errorMessage =
+      (payload && (payload.detail || payload.message)) ||
+      `Lỗi máy chủ (${response.status})`;
+    throw new Error(errorMessage);
+  }
+  return payload;
+}
+
 window.ITSApi = {
-  async request(path, options = {}) {
-    const response = await fetch(path, options);
-    const contentType = response.headers.get("content-type") || "";
-    const body = contentType.includes("application/json") ? await response.json() : null;
-    if (!response.ok) {
-      const message = body && body.detail ? body.detail : `Request failed (${response.status}).`;
-      throw new Error(message);
-    }
-    return body;
+  health() {
+    return requestJson("/api/health");
   },
-  statistics() { return this.request("/api/statistics"); },
-  videos() { return this.request("/api/videos"); },
-  violations() { return this.request("/api/violations"); },
-  startDetection(videoId) {
-    return this.request("/api/detection/start", {
+  statistics() {
+    return requestJson("/api/statistics");
+  },
+  videos() {
+    return requestJson("/api/videos");
+  },
+  violations() {
+    return requestJson("/api/violations");
+  },
+  uploadVideo(fileOrFormData) {
+    const body =
+      fileOrFormData instanceof FormData ? fileOrFormData : new FormData();
+    if (!(fileOrFormData instanceof FormData) && fileOrFormData) {
+      body.append("file", fileOrFormData);
+    }
+    return requestJson("/api/videos/upload", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ video_id: videoId })
+      body,
     });
   },
-  uploadVideo(file) {
-    const form = new FormData();
-    form.append("file", file);
-    return this.request("/api/videos/upload", { method: "POST", body: form });
+  startDetection(videoIdOrPayload) {
+    const body =
+      typeof videoIdOrPayload === "object" && videoIdOrPayload !== null
+        ? videoIdOrPayload
+        : { video_id: videoIdOrPayload };
+    return requestJson("/api/detection/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
   },
-  taskStatus(taskId) { return this.request(`/api/detection/${encodeURIComponent(taskId)}/status`); }
+  taskStatus(taskId) {
+    return requestJson(`/api/detection/${encodeURIComponent(taskId)}/status`);
+  },
+  detectionStatus(taskId) {
+    return this.taskStatus(taskId);
+  },
 };
