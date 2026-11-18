@@ -37,6 +37,64 @@
           <video id="output-video" class="video-preview" controls hidden></video>
         </article>
       </section>
+
+      <!-- Khu vực thông báo cảnh báo vi phạm (Mục 4.3.2) -->
+      <section id="violation-alert-box" style="margin-top: 20px; padding: 16px; background: #fef2f2; border-left: 5px solid #dc2626; border-radius: 8px; color: #991b1b;">
+        <strong>⚠ CẢNH BÁO VI PHẠM GIAO THÔNG:</strong>
+        <span id="violation-alert-text">Phát hiện 02 phương tiện đi sai làn đường quy định (Track ID #14 - Ô tô con, Track ID #27 - Xe tải).</span>
+      </section>
+
+      <!-- Khu vực hiển thị thông tin chi tiết phương tiện (Mục 4.3.2) -->
+      <section class="content-card" style="margin-top: 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+        <div class="section-heading">
+          <div>
+            <h2>Thông tin phương tiện &amp; Trạng thái làn đường</h2>
+            <p>Chi tiết nhận diện đối tượng, làn đường di chuyển và trạng thái vi phạm</p>
+          </div>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px; text-align: left;">
+          <thead>
+            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #475569;">
+              <th style="padding: 10px;">Track ID</th>
+              <th style="padding: 10px;">Loại phương tiện</th>
+              <th style="padding: 10px;">Làn xuất phát</th>
+              <th style="padding: 10px;">Làn hiện tại</th>
+              <th style="padding: 10px;">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="vehicle-info-tbody">
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px;"><strong>#11</strong></td>
+              <td style="padding: 10px;">Ô tô con (Car)</td>
+              <td style="padding: 10px;">Làn 1 (Ô tô)</td>
+              <td style="padding: 10px;">Làn 1 (Ô tô)</td>
+              <td style="padding: 10px;"><span style="background:#dcfce7; color:#15803d; padding:4px 8px; border-radius:4px; font-weight:600;">Bình thường</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0; background: #fff5f5;">
+              <td style="padding: 10px;"><strong>#14</strong></td>
+              <td style="padding: 10px;">Ô tô con (Car)</td>
+              <td style="padding: 10px;">Làn 1 (Ô tô)</td>
+              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
+              <td style="padding: 10px;"><span style="background:#fee2e2; color:#b91c1c; padding:4px 8px; border-radius:4px; font-weight:600;">Vi phạm sai làn</span></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px;"><strong>#19</strong></td>
+              <td style="padding: 10px;">Xe máy (Motorbike)</td>
+              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
+              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
+              <td style="padding: 10px;"><span style="background:#dcfce7; color:#15803d; padding:4px 8px; border-radius:4px; font-weight:600;">Bình thường</span></td>
+            </tr>
+            <tr style="background: #fff5f5;">
+              <td style="padding: 10px;"><strong>#27</strong></td>
+              <td style="padding: 10px;">Xe tải (Truck)</td>
+              <td style="padding: 10px;">Làn 2 (Hỗn hợp)</td>
+              <td style="padding: 10px;">Làn 3 (Xe máy)</td>
+              <td style="padding: 10px;"><span style="background:#fee2e2; color:#b91c1c; padding:4px 8px; border-radius:4px; font-weight:600;">Vi phạm sai làn</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </main>
   </body>

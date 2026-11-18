@@ -246,3 +246,29 @@ button:active, .btn:active {
     width: 100%;
   }
 }
+body {
+  display: flex;
+  min-height: 100vh;
+  margin: 0;
+}
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  min-height: 100vh;
+}
+.main-content {
+  flex: 1;
+  padding: 24px 32px;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+}
