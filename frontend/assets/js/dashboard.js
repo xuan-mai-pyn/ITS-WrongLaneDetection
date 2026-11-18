@@ -1,4 +1,4 @@
-async function loadDashboard() {
+async function loadDashboard(notify = false) {
   try {
     const [stats, videos] = await Promise.all([
       ITSApi.statistics(),
@@ -11,9 +11,9 @@ async function loadDashboard() {
     document.getElementById("detection-rate").textContent = `${Math.round((stats.detection_rate || 0) * 100)}%`;
 
     const measures = [
-      ["Processed videos", stats.processed_videos ?? 0],
-      ["Tracked vehicles", stats.total_vehicles ?? 0],
-      ["Recorded violations", stats.total_violations ?? 0],
+      ["Video đã xử lý", stats.processed_videos ?? 0],
+      ["Phương tiện theo dõi", stats.total_vehicles ?? 0],
+      ["Vi phạm ghi nhận", stats.total_violations ?? 0],
     ];
     const maximum = Math.max(1, ...measures.map((item) => item[1]));
 
@@ -47,11 +47,15 @@ async function loadDashboard() {
             </tr>`
           )
           .join("")
-      : '<tr><td colspan="5" class="empty-state">No videos have been uploaded.</td></tr>';
+      : '<tr><td colspan="5" class="empty-state">Chưa có video nào được tải lên hệ thống.</td></tr>';
+
+    if (notify) {
+      showToast("Đã cập nhật dữ liệu mới nhất.");
+    }
   } catch (error) {
     showToast(error.message, true);
     document.getElementById("recent-videos").innerHTML =
-      '<tr><td colspan="5" class="empty-state">Could not load API data.</td></tr>';
+      '<tr><td colspan="5" class="empty-state">Không thể tải dữ liệu từ máy chủ API.</td></tr>';
   }
 }
 
@@ -61,4 +65,10 @@ function escapeHtml(value) {
   return element.innerHTML;
 }
 
-loadDashboard();
+document.addEventListener("DOMContentLoaded", () => {
+  const refreshBtn = document.getElementById("refresh-dashboard");
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => loadDashboard(true));
+  }
+  loadDashboard(false);
+});
