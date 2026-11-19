@@ -3,78 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lịch sử nhận diện - ITS Wrong-Lane Detection</title>
+  <title>Lịch sử vi phạm - Hệ thống giám sát sai làn ITS</title>
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <h2>ITS Detection</h2>
-      <a href="/dashboard">Dashboard</a>
-      <a href="/detection">Nhận diện</a>
-      <a href="/history" class="active">Lịch sử</a>
-      <a href="/statistics">Thống kê</a>
+      <div class="sidebar-brand">
+        <h2>Giám Sát Giao Thông</h2>
+        <span>Phát hiện phương tiện sai làn</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard">Bảng điều khiển</a>
+        <a href="/detection">Nhận diện video</a>
+        <a href="/history" class="active">Lịch sử vi phạm</a>
+        <a href="/statistics">Thống kê báo cáo</a>
+      </nav>
     </aside>
 
-    <main class="main-content">
-      <div class="page-header">
-        <h1>Lịch sử nhận diện &amp; Vi phạm</h1>
-        <p>Tra cứu danh sách video đã xử lý và nhật ký phương tiện đi sai làn đường</p>
-      </div>
-
-      <section class="panel">
-        <h3>Video đã tải lên</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Tên file</th>
-                <th>Ngày tải lên</th>
-                <th>Trạng thái</th>
-                <th>Thời gian xử lý</th>
-                <th>Số frame</th>
-                <th>Tổng xe</th>
-                <th>Vi phạm</th>
-              </tr>
-            </thead>
-            <tbody id="history-videos"></tbody>
-          </table>
+    <div class="content-wrapper">
+      <header class="top-header">
+        <div class="top-header-title">Hệ thống Giao thông Thông minh (ITS) — Phân tích vi phạm làn đường</div>
+        <div class="top-header-meta">
+          <span id="header-clock"></span>
         </div>
-      </section>
+      </header>
 
-      <section class="panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
-          <h3 style="margin: 0;">Vi phạm ghi nhận gần đây</h3>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <input type="text" id="history-search" placeholder="Tìm theo làn đường hoặc mã..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
-            <select id="history-vehicle-filter" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: #fff;">
-              <option value="all">Tất cả loại xe</option>
-              <option value="car">Ô tô (Car)</option>
-              <option value="motorcycle">Xe máy (Motorcycle)</option>
-              <option value="bus">Xe buýt (Bus)</option>
-              <option value="truck">Xe tải (Truck)</option>
-            </select>
+      <main class="main-content">
+        <div class="page-header">
+          <div>
+            <h1>Lịch sử nhận diện &amp; Vi phạm</h1>
+            <p>Tra cứu danh sách video đã xử lý và nhật ký phương tiện đi sai làn đường</p>
           </div>
+          <a href="/detection" class="btn btn-primary">+ Tải video mới</a>
         </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Video</th>
-                <th>Loại xe</th>
-                <th>Làn vi phạm</th>
-                <th>Thời điểm</th>
-              </tr>
-            </thead>
-            <tbody id="history-violations"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+        <section class="panel">
+          <div class="panel-header">
+            <h3>Danh sách video đã tải lên</h3>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tên tệp</th>
+                  <th>Ngày tải lên</th>
+                  <th>Trạng thái</th>
+                  <th>Thời gian xử lý</th>
+                  <th>Số khung hình</th>
+                  <th>Tổng xe</th>
+                  <th>Vi phạm</th>
+                </tr>
+              </thead>
+              <tbody id="history-videos"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header" style="flex-wrap: wrap;">
+            <h3>Nhật ký vi phạm ghi nhận gần đây</h3>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <input type="text" id="history-search" placeholder="Tìm theo làn đường hoặc mã..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
+              <select id="history-vehicle-filter" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: #fff;">
+                <option value="all">Tất cả loại xe</option>
+                <option value="car">Ô tô</option>
+                <option value="motorcycle">Xe máy</option>
+                <option value="bus">Xe buýt</option>
+                <option value="truck">Xe tải</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mã xe</th>
+                  <th>Video</th>
+                  <th>Loại phương tiện</th>
+                  <th>Làn vi phạm</th>
+                  <th>Thời điểm ghi nhận</th>
+                </tr>
+              </thead>
+              <tbody id="history-violations"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>Đồ án Hệ thống Giao thông Thông minh (ITS) — Phát hiện đi sai làn đường</span>
+        <span>Phiên bản giao diện v1.0</span>
+      </footer>
+    </div>
   </div>
 
+  <div id="toast"></div>
   <script src="/assets/js/api.js"></script>
   <script src="/assets/js/main.js"></script>
   <script src="/assets/js/history.js"></script>

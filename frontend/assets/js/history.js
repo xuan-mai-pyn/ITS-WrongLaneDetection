@@ -80,7 +80,7 @@ async function loadHistory() {
             </tr>`
           )
           .join("")
-      : '<tr><td colspan="7" class="empty-state">No video records yet.</td></tr>';
+      : '<tr><td colspan="7" class="empty-state">Chưa có video nào được ghi nhận.</td></tr>';
 
     cachedViolations = violations || [];
     renderViolationsTable(cachedViolations);
