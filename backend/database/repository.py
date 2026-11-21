@@ -253,8 +253,8 @@ class Repository:
             connection.executemany(
                 """INSERT INTO violations (
                        task_id, video_id, track_id, source_lane, destination_lane,
-                       frame_index, timestamp_seconds, detected_at, evidence_path
-                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                       vehicle_type, frame_index, timestamp_seconds, detected_at, evidence_path
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 [
                     (
                         task_id,
@@ -262,6 +262,7 @@ class Repository:
                         item.track_id,
                         item.source_lane,
                         item.destination_lane,
+                        item.vehicle_type,
                         item.frame_index,
                         item.timestamp_seconds,
                         item.detected_at.isoformat(),

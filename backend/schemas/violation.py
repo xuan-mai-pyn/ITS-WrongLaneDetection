@@ -27,6 +27,11 @@ class ViolationBase(BaseModel):
         description="Mã định danh theo dõi (Tracker ID) của phương tiện vi phạm",
         example=12,
     )
+    vehicle_type: str = Field(
+        default="unknown",
+        description="Loại phương tiện do YOLO nhận diện",
+        example="car",
+    )
     source_lane: str = Field(
         ...,
         min_length=1,
@@ -67,6 +72,7 @@ class ViolationRead(ViolationBase):
                 "task_id": "task-uuid-1234",
                 "video_id": "video-uuid-5678",
                 "track_id": 12,
+                "vehicle_type": "car",
                 "source_lane": "lane_car",
                 "destination_lane": "lane_motorcycle",
                 "frame_index": 145,

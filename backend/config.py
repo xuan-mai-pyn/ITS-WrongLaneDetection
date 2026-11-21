@@ -106,9 +106,12 @@ class Settings:
 
     # ── Đường dẫn file cấu hình làn đường (None nếu chưa cấu hình) ──
     lane_config_path: Path | None = (
-        _project_path(os.environ["ITS_LANE_CONFIG"])
-        if os.getenv("ITS_LANE_CONFIG")
-        else None
+        _project_path(
+            os.getenv(
+                "ITS_LANE_CONFIG",
+                "configs/lanes_selected.json",
+            )
+        )
     )
 
     # ── Giới hạn dung lượng file upload (byte) ── mặc định 500MB ──

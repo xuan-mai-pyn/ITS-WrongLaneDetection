@@ -59,9 +59,10 @@ class WrongLaneTests(unittest.TestCase):
         )
         detector.update(1, "a", 0, 0)
 
-        violation = detector.update(1, "b", 15, 0.5)
+        violation = detector.update(1, "b", 15, 0.5, "bus")
 
         self.assertIsNotNone(violation)
+        self.assertEqual(violation.vehicle_type, "bus")
         self.assertEqual(violation.frame_index, 15)
         self.assertEqual(violation.timestamp_seconds, 0.5)
         self.assertIsNone(detector.update(1, "b", 16, 0.6))

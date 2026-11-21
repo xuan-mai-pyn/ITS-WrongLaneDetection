@@ -1,0 +1,65 @@
+{
+  "lanes": [
+    {
+      "id": "lane_1",
+      "name": "Làn 1 - ngoài cùng bên trái",
+      "polygon": [
+        [40, 1080],
+        [390, 1080],
+        [590, 300],
+        [390, 300]
+      ],
+      "allowed_vehicle_types": ["car", "motorcycle", "bus", "truck", "unknown"],
+      "direction": "Thẳng theo hướng lưu thông từ trên xuống trong vùng quan sát"
+    },
+    {
+      "id": "lane_2",
+      "name": "Làn 2 - trái",
+      "polygon": [
+        [390, 1080],
+        [690, 1080],
+        [760, 300],
+        [590, 300]
+      ],
+      "allowed_vehicle_types": ["car", "motorcycle", "bus", "truck", "unknown"],
+      "direction": "Thẳng theo hướng lưu thông từ trên xuống trong vùng quan sát"
+    },
+    {
+      "id": "lane_3",
+      "name": "Làn 3 - giữa",
+      "polygon": [
+        [690, 1080],
+        [980, 1080],
+        [910, 300],
+        [760, 300]
+      ],
+      "allowed_vehicle_types": ["car", "motorcycle", "bus", "truck", "unknown"],
+      "direction": "Thẳng theo hướng lưu thông từ trên xuống trong vùng quan sát"
+    },
+    {
+      "id": "lane_4",
+      "name": "Làn 4 - phải",
+      "polygon": [
+        [980, 1080],
+        [1270, 1080],
+        [1060, 300],
+        [910, 300]
+      ],
+      "allowed_vehicle_types": ["car", "motorcycle", "bus", "truck", "unknown"],
+      "direction": "Thẳng theo hướng lưu thông từ trên xuống trong vùng quan sát"
+    },
+    {
+      "id": "lane_5",
+      "name": "Làn 5 - ngoài cùng bên phải",
+      "polygon": [
+        [1270, 1080],
+        [1640, 1080],
+        [1390, 300],
+        [1060, 300]
+      ],
+      "allowed_vehicle_types": ["car", "motorcycle", "bus", "truck", "unknown"],
+      "direction": "Thẳng theo hướng lưu thông từ trên xuống trong vùng quan sát"
+    }
+  ],
+  "forbidden_transitions": []
+}

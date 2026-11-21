@@ -24,6 +24,7 @@ class WrongLaneDetector:
         lane_id: str | None,
         frame_index: int,
         timestamp_seconds: float,
+        vehicle_type: str = "unknown",
     ) -> Violation | None:
         """Return one violation after the same forbidden transition persists."""
         if lane_id is None:
@@ -47,6 +48,7 @@ class WrongLaneDetector:
                     self._reported.add(key)
                     return Violation(
                         track_id=track_id,
+                        vehicle_type=vehicle_type,
                         source_lane=transition_origin,
                         destination_lane=previous_lane,
                         frame_index=frame_index,
@@ -61,6 +63,7 @@ class WrongLaneDetector:
                 self._reported.add(key)
                 return Violation(
                     track_id=track_id,
+                    vehicle_type=vehicle_type,
                     source_lane=previous_lane,
                     destination_lane=lane_id,
                     frame_index=frame_index,

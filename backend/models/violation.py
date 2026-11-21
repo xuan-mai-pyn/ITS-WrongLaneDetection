@@ -15,6 +15,10 @@ class Violation(BaseModel):
     """Bản ghi một hành vi chuyển làn trái quy định của một phương tiện."""
 
     track_id: int = Field(description="Mã theo dõi (ByteTrack) của phương tiện vi phạm.")
+    vehicle_type: str = Field(
+        default="unknown",
+        description="Loại phương tiện do YOLO nhận diện.",
+    )
     source_lane: str = Field(description="Mã làn đường mà phương tiện xuất phát.")
     destination_lane: str = Field(
         description="Mã làn đường mà phương tiện chuyển sang trái quy định."

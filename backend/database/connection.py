@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS violations (
     task_id TEXT NOT NULL REFERENCES detection_tasks(id) ON DELETE CASCADE,
     video_id TEXT NOT NULL REFERENCES videos(id) ON DELETE CASCADE,
     track_id INTEGER NOT NULL,
+    vehicle_type TEXT NOT NULL DEFAULT 'unknown',
     source_lane TEXT NOT NULL,
     destination_lane TEXT NOT NULL,
     frame_index INTEGER NOT NULL,
@@ -144,5 +145,17 @@ def initialize_database(database_path: Path) -> None:
                 "ALTER TABLE videos ADD COLUMN vehicle_type_counts_json TEXT NOT NULL DEFAULT '{}'"
             )
             logger.info("Đã bổ sung cột vehicle_type_counts_json vào bảng videos.")
+
+        violation_columns = {
+            row["name"]
+            for row in connection.execute(
+                "PRAGMA table_info(violations)"
+            ).fetchall()
+        }
+        if "vehicle_type" not in violation_columns:
+            connection.execute(
+                "ALTER TABLE violations ADD COLUMN vehicle_type TEXT NOT NULL DEFAULT 'unknown'"
+            )
+            logger.info("Đã bổ sung cột vehicle_type vào bảng violations.")
 
     logger.info("Khởi tạo cơ sở dữ liệu thành công tại: %s", database_path)

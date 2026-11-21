@@ -5,7 +5,9 @@ from __future__ import annotations
 import math
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Any, Deque, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Deque, Dict, List, Optional, Tuple
+
+from backend.models.vehicle import Vehicle
 
 Point = Tuple[float, float]
 
@@ -65,6 +67,7 @@ class VehicleTracker:
         device: Optional[str] = None,
     ) -> None:
         self._model = model
+        self._model_was_provided = model is not None
         self.model_path = model_path
         self.tracker_config = tracker_config
         self.conf = conf
@@ -85,9 +88,17 @@ class VehicleTracker:
             self._model = YOLO(self.model_path)
         return self._model
 
-    def update(self, frame: Any) -> List[TrackedObject]:
+    def update(self, frame: Any) -> List[TrackedObject] | List[Vehicle]:
         """Run detection + tracking on one frame (BGR numpy array)."""
         model = self._load_model()
+        if self._model_was_provided:
+            tracked = model.track(frame)
+            if isinstance(tracked, list) and all(
+                isinstance(item, Vehicle) for item in tracked
+            ):
+                self._sync_vehicle_history(tracked)
+            return tracked
+
         kwargs: Dict[str, Any] = dict(
             persist=True,
             tracker=self.tracker_config,
@@ -138,10 +149,25 @@ class VehicleTracker:
         self._prune()
         return tracked
 
+    def _sync_vehicle_history(self, tracked: List[Vehicle]) -> None:
+        """Keep persistent position history for detector-adapter Vehicle objects."""
+        self._frame_index += 1
+        for vehicle in tracked:
+            if vehicle.track_id is None:
+                continue
+            x1, _, x2, y2 = vehicle.box
+            anchor = ((x1 + x2) / 2.0, y2)
+            history = self._histories.setdefault(
+                vehicle.track_id, deque(maxlen=self.history_length)
+            )
+            history.append(anchor)
+            self._last_seen[vehicle.track_id] = self._frame_index
+        self._prune()
+
     def get_history(self, track_id: int) -> List[Point]:
         return list(self._histories.get(track_id, []))
 
-    def active_ids(self) -> Iterable[int]:
+    def active_ids(self) -> List[int]:
         return list(self._histories.keys())
 
     def reset(self) -> None:

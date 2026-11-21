@@ -9,6 +9,9 @@ Cách chạy:
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 # Thêm thư mục gốc của dự án vào đường dẫn tìm kiếm module Python
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -19,8 +22,8 @@ from backend.database.connection import connect, initialize_database
 def setup() -> None:
     """Thực thi toàn bộ quy trình thiết lập cơ sở dữ liệu và thư mục."""
     print("=" * 65)
-    print("  HỆ THỐNG GIAO THÔNG THÔNG MINH - ITS WRONG-LANE DETECTION")
-    print("  Script thiết lập cơ sở dữ liệu SQLite & thư mục lưu trữ")
+    print("  ITS WRONG-LANE DETECTION - DATABASE SETUP")
+    print("  SQLite database and storage setup")
     print("=" * 65)
 
     settings = Settings()

@@ -97,6 +97,15 @@ class DetectionService:
                 error="Video nguồn không tìm thấy trong hệ thống.",
             )
             return
+        input_path = self.repository.get_video_path(task.video_id)
+        if input_path is None or not input_path.is_file():
+            self.repository.update_task(
+                task_id,
+                status="failed",
+                error="Tệp video nguồn không tồn tại trên ổ đĩa.",
+            )
+            self.repository.update_video_status(task.video_id, "failed")
+            return
 
         output_path = self.settings.processed_dir / f"{task_id}.mp4"
 
@@ -138,7 +147,7 @@ class DetectionService:
 
             # ── 4. Chạy pipeline xử lý video ──
             result = processor.process(
-                input_path=Path(video.stored_path),
+                input_path=input_path,
                 output_path=output_path,
                 progress_callback=lambda progress, frame: (
                     self.repository.update_task(

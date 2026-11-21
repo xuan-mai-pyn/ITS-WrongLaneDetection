@@ -218,6 +218,7 @@ class ApiTests(unittest.TestCase):
             [
                 Violation(
                     track_id=7,
+                    vehicle_type="truck",
                     source_lane="a",
                     destination_lane="b",
                     frame_index=20,
@@ -262,6 +263,7 @@ class ApiTests(unittest.TestCase):
         violations = self.client.get("/api/violations?limit=1").json()
         self.assertEqual(len(violations), 1)
         self.assertEqual(violations[0]["track_id"], 7)
+        self.assertEqual(violations[0]["vehicle_type"], "truck")
         self.assertEqual(violations[0]["video_id"], video["id"])
 
         statistics = self.client.get("/api/statistics").json()

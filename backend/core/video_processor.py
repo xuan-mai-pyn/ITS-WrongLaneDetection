@@ -193,6 +193,7 @@ class VideoProcessor:
                             lane_id,
                             frame_index,
                             timestamp,
+                            vehicle.label,
                         )
 
                         # Nếu phát hiện vi phạm: đổi màu đỏ và lưu bằng chứng
