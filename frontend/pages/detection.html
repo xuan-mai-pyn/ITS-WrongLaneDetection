@@ -11,14 +11,14 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <h2>Giám Sát Giao Thông</h2>
-        <span>Phát hiện phương tiện sai làn</span>
+        <div class="brand-mark" aria-hidden="true">ITS</div>
+        <div><h2>Giám Sát Giao Thông</h2><span>Phát hiện phương tiện sai làn</span></div>
       </div>
       <nav class="sidebar-nav">
-        <a href="/dashboard">Bảng điều khiển</a>
-        <a href="/detection" class="active">Nhận diện video</a>
-        <a href="/history">Lịch sử vi phạm</a>
-        <a href="/statistics">Thống kê báo cáo</a>
+        <a href="/dashboard"><span class="nav-icon">▦</span><span>Bảng điều khiển</span></a>
+        <a href="/detection" class="active"><span class="nav-icon">▶</span><span>Nhận diện video</span></a>
+        <a href="/history"><span class="nav-icon">≡</span><span>Lịch sử vi phạm</span></a>
+        <a href="/statistics"><span class="nav-icon">▥</span><span>Thống kê báo cáo</span></a>
       </nav>
     </aside>
 
@@ -39,19 +39,33 @@
           <a href="/history" class="btn btn-outline">Xem lịch sử nhận diện</a>
         </div>
 
+        <section class="panel workflow-panel" aria-label="Các bước nhận diện">
+          <ol class="workflow-steps">
+            <li class="workflow-step active">Chọn video</li>
+            <li class="workflow-step">Tải lên</li>
+            <li class="workflow-step">Nhận diện</li>
+            <li class="workflow-step">Theo dõi</li>
+            <li class="workflow-step">Xem kết quả</li>
+          </ol>
+        </section>
+
         <div class="workflow-grid">
           <section class="panel">
             <div class="panel-header">
               <h3>1. Chọn video đầu vào</h3>
             </div>
             <label class="upload-zone" for="video-file">
-              <strong>Nhấn để chọn tệp video giao thông</strong>
-              <span class="subtitle">Hỗ trợ định dạng MP4, AVI, MOV</span>
+              <span class="upload-icon" aria-hidden="true">▶</span>
+              <strong>Chọn hoặc thả video giao thông</strong>
+              <span class="subtitle">Nhấn để mở trình duyệt tệp</span>
               <input type="file" id="video-file" accept="video/*">
             </label>
-            <p id="file-meta" class="subtitle" style="margin-bottom: 12px;">Chưa chọn tệp video nào.</p>
-            <button type="button" id="start-analysis" class="btn btn-primary" style="width: 100%;">Bắt đầu phân tích video</button>
-            <video id="input-preview" class="video-preview" controls></video>
+            <div class="file-meta-row">
+              <p id="file-meta" class="subtitle">Chưa chọn tệp video nào.</p>
+              <button type="button" id="clear-video" class="btn btn-outline btn-small" hidden>Chọn lại</button>
+            </div>
+            <video id="input-preview" class="video-preview" controls hidden></video>
+            <button type="button" id="start-analysis" class="btn btn-primary btn-full" disabled>2. Tải lên và bắt đầu phân tích</button>
           </section>
 
           <section class="panel">
@@ -68,7 +82,7 @@
               <span>Khung hình: <strong id="frame-value">0 / 0</strong></span>
             </div>
             <div id="result-summary" class="result-summary">Chưa có kết quả phân tích.</div>
-            <video id="output-video" class="video-preview" controls></video>
+            <video id="output-video" class="video-preview" controls hidden></video>
           </section>
         </div>
       </main>

@@ -44,7 +44,16 @@
 
 @media (max-width: 600px) {
   .chart-row {
-    grid-template-columns: 110px 1fr 48px;
+    grid-template-columns: minmax(82px, 0.9fr) minmax(50px, 1fr);
     font-size: 0.82rem;
+  }
+  .chart-label {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .chart-row .chart-value {
+    grid-column: 1 / -1;
   }
 }

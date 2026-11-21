@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lịch sử vi phạm - Hệ thống giám sát sai làn ITS</title>
   <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/history.css">
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <h2>Giám Sát Giao Thông</h2>
-        <span>Phát hiện phương tiện sai làn</span>
+        <div class="brand-mark" aria-hidden="true">ITS</div>
+        <div><h2>Giám Sát Giao Thông</h2><span>Phát hiện phương tiện sai làn</span></div>
       </div>
       <nav class="sidebar-nav">
-        <a href="/dashboard">Bảng điều khiển</a>
-        <a href="/detection">Nhận diện video</a>
-        <a href="/history" class="active">Lịch sử vi phạm</a>
-        <a href="/statistics">Thống kê báo cáo</a>
+        <a href="/dashboard"><span class="nav-icon">▦</span><span>Bảng điều khiển</span></a>
+        <a href="/detection"><span class="nav-icon">▶</span><span>Nhận diện video</span></a>
+        <a href="/history" class="active"><span class="nav-icon">≡</span><span>Lịch sử vi phạm</span></a>
+        <a href="/statistics"><span class="nav-icon">▥</span><span>Thống kê báo cáo</span></a>
       </nav>
     </aside>
 
@@ -61,16 +62,17 @@
         </section>
 
         <section class="panel">
-          <div class="panel-header" style="flex-wrap: wrap;">
+          <div class="panel-header history-panel-header">
             <h3>Nhật ký vi phạm ghi nhận gần đây</h3>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <input type="text" id="history-search" placeholder="Tìm theo làn đường hoặc mã..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem;">
-              <select id="history-vehicle-filter" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: #fff;">
+            <div class="history-filters">
+              <input type="text" id="history-search" class="input-control" placeholder="Tìm mã xe, video hoặc làn đường">
+              <select id="history-vehicle-filter" class="input-control">
                 <option value="all">Tất cả loại xe</option>
                 <option value="car">Ô tô</option>
                 <option value="motorcycle">Xe máy</option>
                 <option value="bus">Xe buýt</option>
                 <option value="truck">Xe tải</option>
+                <option value="unknown">Chưa xác định</option>
               </select>
             </div>
           </div>

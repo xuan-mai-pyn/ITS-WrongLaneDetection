@@ -44,10 +44,10 @@ async function initBackendHealthIndicator() {
   const text = document.getElementById("apiStatusText");
 
   try {
-    const res = await fetch("/api/health");
-    if (res.ok) {
+    const health = typeof ITSApi !== "undefined" ? await ITSApi.health() : await fetch("/api/health").then(r => r.ok ? r.json() : Promise.reject());
+    if (health.status === "ok" || health.status === "degraded") {
       dot.classList.add("online");
-      text.textContent = "Máy chủ API: Hoạt động";
+      text.textContent = health.status === "ok" ? "Máy chủ API: Hoạt động" : "Máy chủ API: Giảm khả năng";
     } else {
       throw new Error("Lỗi kết nối");
     }
@@ -68,16 +68,38 @@ function formatDate(isoString) {
 
 function statusTag(status) {
   const normalized = String(status || "pending").toLowerCase();
-  if (normalized === "completed") {
+  if (normalized === "completed" || normalized === "processed") {
     return `<span class="tag ok">Hoàn thành</span>`;
   }
   if (normalized === "processing" || normalized === "running") {
     return `<span class="tag warn">Đang xử lý</span>`;
   }
+  if (normalized === "queued" || normalized === "uploaded") {
+    return `<span class="tag warn">Chờ xử lý</span>`;
+  }
   if (normalized === "failed" || normalized === "error") {
     return `<span class="tag danger">Lỗi xử lý</span>`;
   }
-  return `<span class="tag warn">Chờ xử lý</span>`;
+  return `<span class="tag warn">${escapeHtml(normalized)}</span>`;
+}
+
+function formatBytes(bytes) {
+  const value = Number(bytes);
+  if (!Number.isFinite(value) || value <= 0) return "0 MB";
+  if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`;
+  return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function escapeHtml(value) {
+  const element = document.createElement("span");
+  element.textContent = value == null ? "" : String(value);
+  return element.innerHTML;
+}
+
+function vehicleTypeName(value) {
+  const names = { car: "Ô tô", motorcycle: "Xe máy", bus: "Xe buýt", truck: "Xe tải", unknown: "Chưa xác định" };
+  const key = String(value || "unknown").toLowerCase();
+  return names[key] || String(value);
 }
 
 function showToast(message, isError = false) {

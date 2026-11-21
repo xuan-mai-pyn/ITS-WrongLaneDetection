@@ -1,0 +1,48 @@
+.history-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: min(520px, 100%);
+}
+
+.history-panel-header {
+  flex-wrap: wrap;
+}
+
+.history-filters .input-control:first-child {
+  flex: 1 1 250px;
+}
+
+.history-filters .input-control:last-child {
+  flex: 0 1 170px;
+}
+
+.lane-flow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.table-wrap table {
+  min-width: 560px;
+}
+
+.table-wrap td,
+.table-wrap th {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.lane-flow .lane-arrow {
+  color: var(--danger);
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .history-filters { width: 100%; }
+  .history-filters .input-control {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}

@@ -11,14 +11,17 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <h2>Giám Sát Giao Thông</h2>
-        <span>Phát hiện phương tiện sai làn</span>
+        <div class="brand-mark" aria-hidden="true">ITS</div>
+        <div>
+          <h2>Giám Sát Giao Thông</h2>
+          <span>Phát hiện phương tiện sai làn</span>
+        </div>
       </div>
       <nav class="sidebar-nav">
-        <a href="/dashboard" class="active">Bảng điều khiển</a>
-        <a href="/detection">Nhận diện video</a>
-        <a href="/history">Lịch sử vi phạm</a>
-        <a href="/statistics">Thống kê báo cáo</a>
+        <a href="/dashboard" class="active"><span class="nav-icon">▦</span><span>Bảng điều khiển</span></a>
+        <a href="/detection"><span class="nav-icon">▶</span><span>Nhận diện video</span></a>
+        <a href="/history"><span class="nav-icon">≡</span><span>Lịch sử vi phạm</span></a>
+        <a href="/statistics"><span class="nav-icon">▥</span><span>Thống kê báo cáo</span></a>
       </nav>
     </aside>
 
@@ -58,20 +61,20 @@
         </section>
 
         <section class="card-grid">
-          <div class="stat-card">
-            <span>Video đã xử lý</span>
+          <div class="stat-card accent-blue">
+            <span class="stat-label">Video đã xử lý</span>
             <strong id="processed-videos">0</strong>
           </div>
-          <div class="stat-card">
-            <span>Tổng phương tiện</span>
+          <div class="stat-card accent-cyan">
+            <span class="stat-label">Tổng phương tiện</span>
             <strong id="total-vehicles">0</strong>
           </div>
-          <div class="stat-card">
-            <span>Tổng lượt vi phạm</span>
+          <div class="stat-card accent-red">
+            <span class="stat-label">Tổng lượt vi phạm</span>
             <strong id="total-violations">0</strong>
           </div>
-          <div class="stat-card">
-            <span>Tỷ lệ phát hiện</span>
+          <div class="stat-card accent-green">
+            <span class="stat-label">Tỷ lệ phát hiện</span>
             <strong id="detection-rate">0%</strong>
           </div>
         </section>
@@ -82,6 +85,16 @@
               <h3>Biểu đồ tổng hợp chỉ số</h3>
             </div>
             <div id="dashboard-chart"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Trạng thái hệ thống</h3>
+              <span id="system-health-badge" class="tag warn">Đang kiểm tra</span>
+            </div>
+            <div id="system-health" class="health-grid">
+              <div class="empty-state">Đang tải trạng thái hệ thống...</div>
+            </div>
           </div>
 
           <div class="panel">

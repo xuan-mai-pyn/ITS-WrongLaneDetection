@@ -1,9 +1,20 @@
 async function loadDashboard(notify = false) {
   try {
-    const [stats, videos] = await Promise.all([
+    const [statsResult, videosResult, healthResult] = await Promise.allSettled([
       ITSApi.statistics(),
       ITSApi.videos(),
+      ITSApi.health(),
     ]);
+    if (statsResult.status === "rejected" || videosResult.status === "rejected") {
+      throw new Error(
+        statsResult.status === "rejected"
+          ? statsResult.reason.message
+          : videosResult.reason.message
+      );
+    }
+    const stats = statsResult.value;
+    const videos = videosResult.value;
+    const health = healthResult.status === "fulfilled" ? healthResult.value : null;
 
     document.getElementById("processed-videos").textContent = stats.processed_videos ?? 0;
     document.getElementById("total-vehicles").textContent = stats.total_vehicles ?? 0;
@@ -49,8 +60,47 @@ async function loadDashboard(notify = false) {
           .join("")
       : '<tr><td colspan="5" class="empty-state">Chưa có video nào được tải lên hệ thống.</td></tr>';
 
+    if (health) renderSystemHealth(health);
+    else {
+      const container = document.getElementById("system-health");
+      const badge = document.getElementById("system-health-badge");
+      if (container) container.innerHTML = '<div class="empty-state">Không thể tải trạng thái hệ thống.</div>';
+      if (badge) {
+        badge.textContent = "Ngoại tuyến";
+        badge.className = "tag danger";
+      }
+    }
+
     if (notify) {
       showToast("Đã cập nhật dữ liệu mới nhất.");
+    }
+
+    function renderSystemHealth(health) {
+      const container = document.getElementById("system-health");
+      const badge = document.getElementById("system-health-badge");
+      if (!container) return;
+      const dbOk = String(health.database || "").toLowerCase() === "connected";
+      const modelOk = Boolean(health.model_ready);
+      const laneOk = Boolean(health.lane_config_ready);
+      const ready = dbOk && modelOk && laneOk;
+      if (badge) {
+        badge.textContent = ready ? "Sẵn sàng đầy đủ" : "Cần kiểm tra";
+        badge.className = `tag ${ready ? "ok" : "warn"}`;
+      }
+      container.innerHTML = `
+        <div class="health-item"><span>API máy chủ</span><strong class="ok">Hoạt động</strong></div>
+        <div class="health-item"><span>Cơ sở dữ liệu</span><strong class="${dbOk ? "ok" : "bad"}">${dbOk ? "Đã kết nối" : "Không kết nối"}</strong></div>
+        <div class="health-item"><span>Mô hình YOLO</span><strong class="${modelOk ? "ok" : "bad"}">${modelOk ? "Sẵn sàng" : "Chưa sẵn sàng"}</strong></div>
+        <div class="health-item"><span>Cấu hình làn đường</span><strong class="${laneOk ? "ok" : "bad"}">${laneOk ? "Đã cấu hình" : "Chưa cấu hình"}</strong></div>`;
+      if (Array.isArray(health.warnings) && health.warnings.length) {
+        container.insertAdjacentHTML(
+          "beforeend",
+          `<div class="health-item health-warning">
+            <span>Cảnh báo</span>
+            <ul>${health.warnings.map((warning) => `<li>${escapeHtml(warning)}</li>`).join("")}</ul>
+          </div>`
+        );
+      }
     }
   } catch (error) {
     showToast(error.message, true);
